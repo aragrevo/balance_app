@@ -1,0 +1,86 @@
+---
+
+---
+
+<main class="p-8 text-white bg-primary rounded-2xl h-full min-h-dvh flex flex-col">
+  <!-- <a href="#" class="back-button">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a> -->
+  
+  <div class="flex-1"></div>
+  <h1 class="text-5xl font-medium mb-16">Sign up</h1>
+  
+  
+  <div class="">
+    <p class="text-white text-medium text-sm">Login with Github</p>
+
+    <button class="w-full text-tertiary bg-secondary rounded-full py-4 text-sm font-medium my-8
+    hover:bg-secondary/80 transition-background duration-300 hover:cursor-pointer hover:text-tertiary/80">Continue</button>
+
+    <p class="text-white text-normal text-xs text-center">v 1.0.0</p>
+  </div>
+  <div class="flex-1"></div>
+  <div class="flex-1"></div>
+</main>
+
+<style>
+
+  .back-button {
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+
+  .phone-input {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .country-code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .country-code span {
+    font-size: 1rem;
+  }
+
+  input[type="tel"] {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: white;
+    font-size: 1rem;
+  }
+
+  input[type="tel"]::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+</style>
+
+<script>
+  import { supabase } from "../lib/supabase";
+
+  const button = document.querySelector('button');
+  button?.addEventListener('click', async () => {
+    // signInWithGithub();
+    console.log('clicked');
+    const { data, error } = await supabase.auth.signInWithOAuth({
+  provider: 'github',
+  options: {
+    // redirectTo: `http://localhost:4321/auth/callback`,
+  },
+})
+
+    console.log(data, error);
+  });
+</script>
+
