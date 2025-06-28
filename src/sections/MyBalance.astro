@@ -1,0 +1,28 @@
+---
+import ActionButton from "@/components/ActionButton.astro";
+import BalanceCard from "@/components/BalanceCard.astro";
+import FinancialHealth from "@/components/FinancialHealth.astro";
+import TransferList from "@/components/TransferList.astro";
+---
+
+<section>
+    <!-- Balance Card -->
+    <BalanceCard balance={190008} percentage={8} />
+
+    <!-- Action Buttons -->
+    <div class="flex gap-4 mt-8">
+      <ActionButton text="Send" icon="send" />
+      <ActionButton text="Receive" icon="receive" />
+      <ActionButton text="Add" icon="add" />
+    </div>
+
+    <!-- Transfer List -->
+    <div class="mt-12">
+      <TransferList />
+    </div>
+
+    <!-- Financial Health -->
+    <div class="mt-12">
+      <FinancialHealth />
+    </div>
+</section>
