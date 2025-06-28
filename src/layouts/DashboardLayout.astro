@@ -1,0 +1,13 @@
+---
+import Navigation from "@/components/Navigation.astro";
+import Layout from "./Layout.astro";
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+    <main class="min-h-dvh h-dvh relative">
+        <slot />
+        <!-- Bottom Navigation -->
+        <Navigation />
+    </main>
+</Layout>
