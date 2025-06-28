@@ -1,0 +1,52 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import BalanceCard from "@/components/BalanceCard.astro";
+import ActionButton from "@/components/ActionButton.astro";
+import TransferList from "@/components/TransferList.astro";
+import FinancialHealth from "@/components/FinancialHealth.astro";
+import MyBalance from "@/sections/MyBalance.astro";
+
+
+const user = {
+  name: "Esaaa",
+  avatar: "/avatars/profile.jpg"
+};
+---
+
+<DashboardLayout frontmatter={{ title: "Dashboard" }}>
+  <div class="">
+    <div class="container mx-auto px-4">
+      <!-- Header -->
+      <header class="py-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img 
+            src={user.avatar} 
+            alt="Profile picture" 
+            class="w-12 h-12 rounded-full object-cover"
+          />
+          <h1 class="text-white text-xl">Hi, {user.name}!</h1>
+        </div>
+        <div class="flex gap-4">
+          <button class="text-white border rounded-full p-2">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-6 6c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <nav class="mb-8">
+        <ul class="flex gap-6 text-white text-xs items-center leading-none">
+          <li class="opacity-100 font-medium">My Balance</li>
+          <li class="opacity-50">Upcoming Bills</li>
+          <li class="opacity-50">Transactions</li>
+        </ul>
+      </nav>
+
+      <MyBalance />
+    </div>
+
+   
+  </div>
+</DashboardLayout>
