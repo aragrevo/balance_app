@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
-
 @theme {
   --color-primary: #03034a;
   --color-secondary: #BFB7FD;
   --color-tertiary: #151521;
+  --color-white: #fff;
+  --color-quaternary: #E9E6F7;
 }
 
 html {
@@ -13,4 +14,13 @@ html {
 
 body {
   font-family: "Plus Jakarta Sans Variable", sans-serif;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
