@@ -5,12 +5,45 @@ import ActionButton from "@/components/ActionButton.astro";
 import TransferList from "@/components/TransferList.astro";
 import FinancialHealth from "@/components/FinancialHealth.astro";
 import MyBalance from "@/sections/MyBalance.astro";
+import { supabase } from "@/lib/supabase";
 
+const accessToken = Astro.cookies.get("sb-access-token");
+const refreshToken = Astro.cookies.get("sb-refresh-token");
 
+if (!accessToken || !refreshToken) {
+  return Astro.redirect("/");
+}
+
+let session;
+try {
+  session = await supabase.auth.setSession({
+    refresh_token: refreshToken.value,
+    access_token: accessToken.value,
+  });
+  if (session.error) {
+    Astro.cookies.delete("sb-access-token", {
+      path: "/",
+    });
+    Astro.cookies.delete("sb-refresh-token", {
+      path: "/",
+    });
+    return Astro.redirect("/");
+  }
+} catch (error) {
+  Astro.cookies.delete("sb-access-token", {
+    path: "/",
+  });
+  Astro.cookies.delete("sb-refresh-token", {
+    path: "/",
+  });
+  return Astro.redirect("/");
+}
+
+const email = session.data.user?.email;
 const user = {
-  name: "Esaaa",
-  avatar: "/avatars/profile.jpg"
-};
+  name: session.data.user?.user_metadata.name,
+  avatar: session.data.user?.user_metadata.avatar_url,
+}
 ---
 
 <DashboardLayout frontmatter={{ title: "Dashboard" }}>
@@ -27,11 +60,14 @@ const user = {
           <h1 class="text-white text-xl">Hi, {user.name}!</h1>
         </div>
         <div class="flex gap-4">
-          <button class="text-white border rounded-full p-2">
+          <a href="/api/auth/signout" class="text-white border rounded-full p-2">
+            <svg class="w-6 h-6"  width="24" height="24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M9.002 7c.012-2.175.109-3.353.877-4.121C10.758 2 12.172 2 15 2h1c2.829 0 4.243 0 5.122.879C22 3.757 22 5.172 22 8v8c0 2.828 0 4.243-.878 5.121C20.242 22 18.829 22 16 22h-1c-2.828 0-4.242 0-5.121-.879-.768-.768-.865-1.946-.877-4.121"/><path stroke-linejoin="round" d="M15 12H2m0 0 3.5-3M2 12l3.5 3"/></g></svg>
+          </a>
+          <!-- <button class="text-white border rounded-full p-2">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-6 6c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2z"/>
             </svg>
-          </button>
+          </button> -->
         </div>
       </header>
 
