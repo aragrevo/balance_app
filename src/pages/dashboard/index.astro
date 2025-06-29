@@ -1,12 +1,9 @@
 ---
 import DashboardLayout from "@/layouts/DashboardLayout.astro";
-import BalanceCard from "@/components/BalanceCard.astro";
-import ActionButton from "@/components/ActionButton.astro";
-import TransferList from "@/components/TransferList.astro";
-import FinancialHealth from "@/components/FinancialHealth.astro";
 import MyBalance from "@/sections/MyBalance.astro";
 import { supabase } from "@/lib/supabase";
 import UpcomingBills from "@/sections/UpcomingBills.astro";
+import Transactions from "@/sections/Transactions.astro";
 
 const accessToken = Astro.cookies.get("sb-access-token");
 const refreshToken = Astro.cookies.get("sb-refresh-token");
@@ -111,7 +108,9 @@ const user = {
           <div id="slide-2">
             <UpcomingBills />
           </div>
-          <div id="slide-3">3</div>
+          <div id="slide-3">
+            <Transactions />
+          </div>
         </div>
       </div>
     </div>
