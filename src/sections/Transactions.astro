@@ -1,0 +1,44 @@
+---
+import { supabase } from "@/lib/supabase";
+import { formatDate, formatMoney } from "@/lib/formatter";
+
+interface Bill {
+  id: string;
+  name: string;
+  amount: number;
+  date: string;
+  duration: string;
+  type: string;
+  logo: string;
+}
+
+const { data, error } = await supabase.from("expenses").select()
+.filter("userId", "eq", '107022098103402101957' ).filter("date", "gte", '2025-06-01')
+.order("date", { ascending: false });
+
+---
+
+<section class="h-full overflow-hidden">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-white text-4xl font-medium mb-3">Transactions</h2>
+  </div>
+
+  <div class="space-y-4 max-h-[75dvh] overflow-y-auto scrollbar-hide pb-14">
+    {data?.map(bill => (
+      <div class="bg-white/5 rounded-2xl p-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+              <img src={`logos/${bill.money}.svg`} alt={bill.money} class="w-6 h-6" />
+            </div>
+            <div>
+              <p class="text-sm text-gray-400 capitalize">{bill.description} {bill.observation}</p>
+              <h3 class="text-white font-medium text-xl">{formatDate(bill.date)}</h3>
+            </div>
+          </div>
+          <span class="text-white font-medium">{formatMoney(bill.cost, bill.money)}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</section> 
