@@ -1,6 +1,7 @@
 ---
-import { supabase } from "@/lib/supabase";
+
 import { formatDate, formatMoney } from "@/lib/formatter";
+import { getIncomes } from "@/services/incomes.service";
 
 interface Bill {
   id: string;
@@ -12,9 +13,10 @@ interface Bill {
   logo: string;
 }
 
-const { data, error } = await supabase.from("revenues").select()
-.filter("userId", "eq", '107022098103402101957' ).filter("date", "gte", '2025-06-01')
-.order("date", { ascending: false });
+const currentDate = new Date();
+const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+const { data, error } = await getIncomes(startDate.toISOString(), endDate.toISOString())
 
 ---
 

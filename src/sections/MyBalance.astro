@@ -3,11 +3,25 @@ import ActionButton from "@/components/ActionButton.astro";
 import BalanceCard from "@/components/BalanceCard.astro";
 import FinancialHealth from "@/components/FinancialHealth.astro";
 import TransferList from "@/components/TransferList.astro";
----
+import { getBalance, MoneyTypes } from "@/services/balance.service";
 
+
+const moneyType = Astro.params.money as MoneyTypes || MoneyTypes.EUR;
+
+const currentDate = new Date();
+const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+const { data, error } = await getBalance(startDate.toISOString(), endDate.toISOString(), moneyType)
+if (error) {
+    console.error(error);
+}
+const balance = data?.incomes - data?.expenses;
+const percentage = (balance / data?.incomes) * 100;
+
+---
 <section>
     <!-- Balance Card -->
-    <BalanceCard balance={190008} percentage={8} />
+      <BalanceCard balance={balance} percentage={percentage} />
 
     <!-- Action Buttons -->
     <div class="flex gap-4 mt-8">
