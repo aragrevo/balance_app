@@ -44,16 +44,23 @@ const { data, error } = await getTransactions(
         const description = transaction.observation
           ? `${transaction.observation}`
           : transaction.description;
+
         return (
           <div class="rounded-2xl bg-white/5 p-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white">
-                  <img
-                    src={`logos/${transaction.money}.svg`}
-                    alt={transaction.money}
-                    class="h-6 w-6"
-                  />
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#070417]/40">
+                  {transaction.observation ? (
+                    <span class="text-sm text-white uppercase">
+                      {transaction.observation.slice(0, 2)}
+                    </span>
+                  ) : (
+                    <img
+                      src={`/icons/${transaction.description}.svg`}
+                      alt={transaction.money}
+                      class="h-6 w-6"
+                    />
+                  )}
                 </div>
                 <div>
                   <p class="text-sm text-gray-400 capitalize">{description}</p>

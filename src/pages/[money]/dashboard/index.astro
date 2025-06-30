@@ -46,20 +46,16 @@ const user = {
         <div class="flex gap-4">
           <a
             href="/api/auth/signout"
-            class="rounded-full border p-2 text-white"
+            class="rounded-full border border-white/90 p-2 text-white"
           >
-            <svg class="h-6 w-6" width="24" height="24"
-              ><g
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-width="1.5"
-                ><path
-                  d="M9.002 7c.012-2.175.109-3.353.877-4.121C10.758 2 12.172 2 15 2h1c2.829 0 4.243 0 5.122.879C22 3.757 22 5.172 22 8v8c0 2.828 0 4.243-.878 5.121C20.242 22 18.829 22 16 22h-1c-2.828 0-4.242 0-5.121-.879-.768-.768-.865-1.946-.877-4.121"
-                ></path><path
-                  stroke-linejoin="round"
-                  d="M15 12H2m0 0 3.5-3M2 12l3.5 3"></path></g
-              ></svg
+            <svg
+              class="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="currentColor"
+                d="M5.616 20q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h6.403v1H5.616q-.231 0-.424.192T5 5.616v12.769q0 .23.192.423t.423.192h6.404v1zm10.846-4.461l-.702-.72l2.319-2.319H9.192v-1h8.887l-2.32-2.32l.702-.718L20 12z"
+              ></path></svg
             >
           </a>
           <!-- <button class="text-white border rounded-full p-2">
@@ -75,13 +71,13 @@ const user = {
         <nav class="mb-8 flex items-center justify-between">
           <ul class="flex items-center gap-6 text-sm leading-none text-white">
             <li class="font-medium">
-              <a href="#slide-1" class="opacity-100">My Balance </a>
+              <a href="#slide-1" class="tab opacity-100">My Balance </a>
             </li>
             <li class="">
-              <a href="#slide-2" class="opacity-50">Upcoming Bills </a>
+              <a href="#slide-2" class="tab opacity-50">Upcoming Bills </a>
             </li>
             <li class="">
-              <a href="#slide-3" class="opacity-50">Transactions </a>
+              <a href="#slide-3" class="tab opacity-50">Transactions </a>
             </li>
           </ul>
           <MoneySelector />
@@ -135,7 +131,7 @@ const user = {
   import { navigate } from "astro:transitions/client";
   import { $$ } from "@/lib/selector";
   document.addEventListener("astro:page-load", () => {
-    const anchors: NodeListOf<HTMLAnchorElement> = $$("a");
+    const anchors: NodeListOf<HTMLAnchorElement> = $$("a.tab");
     anchors.forEach((anchor) => {
       anchor.addEventListener("click", (e) => {
         anchors.forEach((anchor) => {
