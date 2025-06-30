@@ -4,6 +4,7 @@ import MyBalance from "@/sections/MyBalance.astro";
 import UpcomingBills from "@/sections/UpcomingBills.astro";
 import Transactions from "@/sections/Transactions.astro";
 import { setSession } from "@/services/auth.service";
+import MoneySelector from "@/components/MoneySelector.astro";
 
 const accessToken = Astro.cookies.get("sb-access-token");
 const refreshToken = Astro.cookies.get("sb-refresh-token");
@@ -71,7 +72,7 @@ const user = {
 
       <div class="w-full overflow-hidden">
         <!-- Navigation Tabs -->
-        <nav class="mb-8">
+        <nav class="mb-8 flex items-center justify-between">
           <ul class="flex items-center gap-6 text-sm leading-none text-white">
             <li class="font-medium">
               <a href="#slide-1" class="opacity-100">My Balance </a>
@@ -83,6 +84,7 @@ const user = {
               <a href="#slide-3" class="opacity-50">Transactions </a>
             </li>
           </ul>
+          <MoneySelector />
         </nav>
 
         <div class="slides">
@@ -130,15 +132,25 @@ const user = {
   </style>
 </DashboardLayout>
 <script>
-  const anchors = document.querySelectorAll("a");
-  anchors.forEach((anchor) => {
-    anchor.addEventListener("click", (e) => {
-      anchors.forEach((anchor) => {
-        anchor.classList.remove("opacity-100");
-        anchor.classList.add("opacity-50");
+  import { navigate } from "astro:transitions/client";
+  import { $$ } from "@/lib/selector";
+  document.addEventListener("astro:page-load", () => {
+    const anchors: NodeListOf<HTMLAnchorElement> = $$("a");
+    anchors.forEach((anchor) => {
+      anchor.addEventListener("click", (e) => {
+        anchors.forEach((anchor) => {
+          anchor.classList.remove("opacity-100");
+          anchor.classList.add("opacity-50");
+        });
+        anchor.classList.remove("opacity-50");
+        anchor.classList.add("opacity-100");
       });
-      anchor.classList.remove("opacity-50");
-      anchor.classList.add("opacity-100");
     });
+
+    console.log("astro:page-load", window.location.hash);
+    if (window.location.hash) {
+      const anchor = $$("a[href='" + window.location.hash + "']")[0];
+      anchor.click();
+    }
   });
 </script>

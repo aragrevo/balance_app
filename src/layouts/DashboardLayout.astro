@@ -5,9 +5,9 @@ const { title } = Astro.props;
 ---
 
 <Layout title={title}>
-    <main class="min-h-dvh h-dvh relative max-h-dvh ">
-        <slot />
-        <!-- Bottom Navigation -->
-        <Navigation transition:name="hero"/>
-    </main>
+  <main class="relative h-dvh max-h-dvh min-h-dvh">
+    <slot />
+    <!-- Bottom Navigation -->
+    <Navigation transition:name="hero" />
+  </main>
 </Layout>
