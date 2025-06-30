@@ -1,4 +1,6 @@
 ---
+import { formatMoney, formatNumber } from "@/lib/formatter";
+
 interface Props {
   balance: number;
   percentage: number;
@@ -7,12 +9,16 @@ interface Props {
 const { balance, percentage } = Astro.props;
 ---
 
-<div class="text-white">
-  <h2 class="text-4xl font-medium mb-3">Your Balance</h2>
-  <div class="flex items-center gap-2">
-    <span class="text-3xl font-medium">${balance.toLocaleString()}</span>
-    <span class="ml-2 px-2 py-1 bg-emerald-400/20 text-emerald-400 rounded-full text-sm">
-      +{percentage}%
-    </span>
+<article class="flex items-center justify-between">
+  <div class="text-white">
+    <h2 class="mb-3 text-4xl font-medium">Your Balance</h2>
+    <div class="flex items-center gap-2">
+      <span class="text-3xl font-medium">{formatMoney(balance)}</span>
+      <span
+        class="ml-2 rounded-full bg-emerald-400/20 px-2 py-1 text-sm text-emerald-400"
+      >
+        {formatNumber(percentage)}%
+      </span>
+    </div>
   </div>
-</div> 
+</article>
