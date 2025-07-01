@@ -10,6 +10,7 @@
     "use": "nvm use 24.0.2"
   },
   "dependencies": {
+    "@astrojs/vercel": "^8.2.0",
     "@fontsource-variable/plus-jakarta-sans": "5.2.6",
     "@supabase/supabase-js": "2.50.2",
     "@tailwindcss/vite": "4.1.11",

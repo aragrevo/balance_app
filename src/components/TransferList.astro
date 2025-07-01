@@ -1,0 +1,35 @@
+---
+interface Contact {
+  id: string;
+  image: string;
+}
+
+const contacts: Contact[] = [
+  { id: "add", image: "" },
+  { id: "1", image: "/avatars/avatar-1.jpg" },
+  { id: "2", image: "/avatars/avatar-2.jpg" },
+  { id: "3", image: "/avatars/avatar-3.jpg" },
+  { id: "4", image: "/avatars/avatar-4.jpg" },
+  { id: "5", image: "/avatars/avatar-5.jpg" },
+];
+---
+
+<div class="text-white">
+  <h3 class="text-2xl font-medium mb-4">Transfer list</h3>
+  <div class="flex gap-3">
+    <button class="w-12 h-12 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 flex items-center justify-center transition-colors">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+      </svg>
+    </button>
+    {contacts.slice(1).map(contact => (
+      <button class="w-12 h-12 rounded-full overflow-hidden">
+        <img 
+          src={contact.image} 
+          alt="Contact avatar" 
+          class="w-full h-full object-cover"
+        />
+      </button>
+    ))}
+  </div>
+</div> 

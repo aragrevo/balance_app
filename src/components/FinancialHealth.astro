@@ -1,0 +1,36 @@
+---
+const days = [
+  { day: "Mon", values: [20, 30, 40, 45, 50] },
+  { day: "Sun", values: [30, 35, 45, 20, 25] },
+  { day: "Thu", values: [25, 30, 35, 40, 45] },
+  { day: "Wed", values: [40, 45, 35, 30, 20] },
+  { day: "Thr", values: [35, 30, 25, 20, 15] }
+];
+---
+
+<div class="text-white">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-2xl font-medium">Financial health</h3>
+    <div class="flex items-center gap-2">
+      <span class="text-gray-400">Latest 7 days</span>
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 14l5-5 5 5H7z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="flex items-end justify-between h-64 gap-4">
+    {days.map(({ day, values }) => (
+      <div class="flex-1 flex flex-col items-center gap-2">
+        <div class="w-full flex flex-col gap-1">
+          {values.map(value => (
+            <div 
+              class={`w-full h-3 rounded-sm ${value > 35 ? 'bg-indigo-500/20' : 'bg-red-500/20'}`}
+            />
+          ))}
+        </div>
+        <span class="text-sm text-gray-400">{day}</span>
+      </div>
+    ))}
+  </div>
+</div> 
