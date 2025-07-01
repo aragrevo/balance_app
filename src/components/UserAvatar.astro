@@ -1,0 +1,14 @@
+---
+import { getUser } from "@/services/auth.service";
+
+const { data: user, error } = await getUser();
+if (error) {
+  console.error(error);
+}
+---
+
+<img
+  src={user?.avatar}
+  alt="Profile picture"
+  class="h-12 w-12 rounded-full object-cover"
+/>

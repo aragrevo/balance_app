@@ -1,7 +1,7 @@
 ---
 import { MoneyTypes } from "@/model/money-types.enum";
 
-const money = Astro.params.money;
+const money = Astro.cookies.get("money")?.value || MoneyTypes.EUR;
 const urlsMoney = [
   {
     money: MoneyTypes.EUR,
@@ -38,16 +38,17 @@ const urlsMoney = [
   >
     {
       urlsMoney.map((url) => (
-        <a
-          class="flex items-center justify-center rounded-lg p-2 hover:bg-white/10"
-          href={`/${url.url}`}
+        <button
+          name="money"
+          value={url.money}
+          class="btn-select-money flex w-full items-center justify-center rounded-lg p-2 hover:cursor-pointer hover:bg-white/10"
         >
           <img
             src={`/logos/${url.money}.svg`}
             alt={url.money}
             class="h-6 w-6"
           />
-        </a>
+        </button>
       ))
     }
   </div>
@@ -55,14 +56,27 @@ const urlsMoney = [
 
 <script>
   import { $$ } from "@/lib/selector";
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
   document.addEventListener("astro:page-load", () => {
     const btnMoney = $$("#btn-money");
     const menuMoney = $$("#menu-money");
+    const btnSelectMoney = $$(".btn-select-money");
     btnMoney.forEach((btn) => {
       btn.addEventListener("click", () => {
         menuMoney.forEach((menu) => {
           menu.classList.toggle("hidden");
         });
+      });
+    });
+    btnSelectMoney.forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const money = btn.value;
+        const { error } = await actions.setMoney({ money });
+        console.log(error);
+        if (!error) {
+          navigate(`/`);
+        }
       });
     });
   });
