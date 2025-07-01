@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import SignUpForm from "@/components/SignUpForm.astro";
+import { routes } from "@/model/routes";
 import "../styles/global.css";
 
 const { cookies, redirect } = Astro;
@@ -9,10 +10,10 @@ const accessToken = cookies.get("sb-access-token");
 const refreshToken = cookies.get("sb-refresh-token");
 
 if (accessToken && refreshToken) {
-  return redirect("/eur/dashboard");
+  return redirect(routes.dashboard);
 }
 ---
 
 <Layout title="Sign Up">
-	<SignUpForm />
+  <SignUpForm />
 </Layout>

@@ -12,7 +12,8 @@ interface Transaction {
   money: string;
 }
 
-const moneyType = (Astro.params.money as MoneyTypes) || MoneyTypes.EUR;
+const moneyType =
+  (Astro.cookies.get("money")?.value as MoneyTypes) || MoneyTypes.EUR;
 
 const currentDate = new Date();
 const startDate = new Date(

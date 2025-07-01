@@ -5,6 +5,7 @@ import UpcomingBills from "@/sections/UpcomingBills.astro";
 import Transactions from "@/sections/Transactions.astro";
 import { setSession } from "@/services/auth.service";
 import MoneySelector from "@/components/MoneySelector.astro";
+import UserAvatar from "@/components/UserAvatar.astro";
 
 const accessToken = Astro.cookies.get("sb-access-token");
 const refreshToken = Astro.cookies.get("sb-refresh-token");
@@ -32,15 +33,11 @@ const user = {
 
 <DashboardLayout title="Dashboard | Finance Tracker">
   <div class="h-full">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto">
       <!-- Header -->
-      <header class="flex items-center justify-between py-6">
+      <header class="flex items-center justify-between px-4 py-6">
         <div class="flex items-center gap-3">
-          <img
-            src={user.avatar}
-            alt="Profile picture"
-            class="h-12 w-12 rounded-full object-cover"
-          />
+          <UserAvatar />
           <h1 class="text-xl text-white">Hi, {user.name}!</h1>
         </div>
         <div class="flex gap-4">
@@ -58,17 +55,12 @@ const user = {
               ></path></svg
             >
           </a>
-          <!-- <button class="text-white border rounded-full p-2">
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-6 6c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2z"/>
-            </svg>
-          </button> -->
         </div>
       </header>
 
-      <div class="w-full overflow-hidden">
+      <div class="h-full w-full overflow-hidden">
         <!-- Navigation Tabs -->
-        <nav class="mb-8 flex items-center justify-between">
+        <nav class="mb-8 flex items-center justify-between px-4">
           <ul class="flex items-center gap-6 text-sm leading-none text-white">
             <li class="font-medium">
               <a href="#slide-1" class="tab opacity-100">My Balance </a>
@@ -83,14 +75,14 @@ const user = {
           <MoneySelector />
         </nav>
 
-        <div class="slides">
+        <div class="slides h-full">
           <div id="slide-1">
             <MyBalance />
           </div>
-          <div id="slide-2">
+          <div id="slide-2" class="px-4">
             <UpcomingBills />
           </div>
-          <div id="slide-3">
+          <div id="slide-3" class="px-4">
             <Transactions />
           </div>
         </div>
@@ -118,7 +110,7 @@ const user = {
       transform-origin: center center;
       transform: scale(1);
       transition: transform 0.5s;
-      position: relative;
+      /* position: relative; */
       /* max-height: 80dvh; */
 
       &::-webkit-scrollbar {

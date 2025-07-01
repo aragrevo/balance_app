@@ -3,10 +3,13 @@ import ActionButton from "@/components/ActionButton.astro";
 import BalanceCard from "@/components/BalanceCard.astro";
 import FinancialHealth from "@/components/FinancialHealth.astro";
 import TransferList from "@/components/TransferList.astro";
+import UserAvatar from "@/components/UserAvatar.astro";
 import { MoneyTypes } from "@/model/money-types.enum";
+import { getExpenseCategories } from "@/services/admin.service";
 import { getBalance } from "@/services/balance.service";
 
-const moneyType = (Astro.params.money as MoneyTypes) || MoneyTypes.EUR;
+const moneyType =
+  (Astro.cookies.get("money")?.value as MoneyTypes) || MoneyTypes.EUR;
 
 const currentDate = new Date();
 const startDate = new Date(
@@ -27,28 +30,63 @@ const { data, error } = await getBalance(
 if (error) {
   console.error(error);
 }
+console.log(data);
+
 const balance = data?.incomes - data?.expenses;
 const percentage = (balance / data?.incomes) * 100;
 ---
 
-<section>
+<section class="h-full px-4">
   <!-- Balance Card -->
   <BalanceCard balance={balance} percentage={percentage} />
 
   <!-- Action Buttons -->
   <div class="mt-8 flex gap-4">
-    <ActionButton text="Send" icon="send" />
-    <ActionButton text="Receive" icon="receive" />
-    <ActionButton text="Add" icon="add" />
+    <ActionButton text="Pay" icon="send" class="bg-secondary btn-pay" />
+    <ActionButton text="Receive" icon="receive" class="bg-quaternary" />
+    <ActionButton text="Add" icon="add" class="bg-quaternary" />
   </div>
 
   <!-- Transfer List -->
-  <div class="mt-12">
+  <!-- <div class="mt-12">
     <TransferList />
-  </div>
+  </div> -->
 
   <!-- Financial Health -->
   <div class="mt-12">
     <FinancialHealth />
   </div>
 </section>
+
+<style>
+  .custom-select {
+    &,
+    &::picker(select) {
+      appearance: base-select;
+    }
+  }
+</style>
+
+<script>
+  import { $ } from "@/lib/selector";
+
+  const showAside = () => {
+    const aside = $("#pay-form");
+    aside.classList.remove("top-100");
+    aside.classList.remove("bottom-100");
+    aside.classList.add("bottom-0");
+    aside.classList.add("top-0");
+    setTimeout(() => {
+      aside.classList.remove("invisible");
+      aside.classList.remove("translate-y-full");
+    }, 100);
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    const payButton = $(".btn-pay");
+
+    payButton.addEventListener("click", () => {
+      showAside();
+    });
+  });
+</script>

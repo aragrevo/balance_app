@@ -1,0 +1,22 @@
+---
+interface Props {
+  text: string;
+  icon: "send" | "receive" | "add";
+  class: string;
+}
+
+const { text, icon, class: className } = Astro.props;
+
+const icons = {
+  send: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none"><path stroke="#151521" stroke-linecap="round" stroke-width="1.5" d="M12 6.401c1.523.009 2.347.076 2.885.614.615.615.615 1.605.615 3.585v.7c0 1.98 0 2.97-.615 3.585-.615.615-1.605.615-3.585.615H5.7c-1.98 0-2.97 0-3.585-.615C1.5 14.27 1.5 13.28 1.5 11.3v-.7c0-1.98 0-2.97.615-3.585.538-.538 1.363-.605 2.885-.614"/><path stroke="#151521" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.5 10.6V1.5m0 0 2.1 2.45M8.5 1.5 6.4 3.95"/></svg>`,
+  receive: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none"><path stroke="#151521" stroke-linecap="round" stroke-width="1.5" d="M12 6.401c1.523.009 2.347.076 2.885.614.615.615.615 1.605.615 3.585v.7c0 1.98 0 2.97-.615 3.585-.615.615-1.605.615-3.585.615H5.7c-1.98 0-2.97 0-3.585-.615C1.5 14.27 1.5 13.28 1.5 11.3v-.7c0-1.98 0-2.97.615-3.585.538-.538 1.363-.605 2.885-.614"/><path stroke="#151521" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.5 10.6V1.5m0 0 2.1 2.45M8.5 1.5 6.4 3.95"/></svg>`,
+  add: `<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>`,
+};
+---
+
+<button
+  class={`flex items-center justify-center gap-2 rounded-full px-6 py-3 text-tertiary text-xs font-medium transition-colors hover:opacity-80 hover:cursor-pointer ${className}`}
+>
+  <Fragment set:html={icons[icon]} />
+  <span>{text}</span>
+</button>

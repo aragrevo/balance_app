@@ -1,13 +1,15 @@
 ---
 import Navigation from "@/components/Navigation.astro";
 import Layout from "./Layout.astro";
+import PayForm from "@/components/PayForm.astro";
 const { title } = Astro.props;
 ---
 
 <Layout title={title}>
-  <main class="relative h-dvh max-h-dvh min-h-dvh">
+  <main class="relative">
     <slot />
     <!-- Bottom Navigation -->
     <Navigation transition:name="hero" />
   </main>
+  <PayForm />
 </Layout>
