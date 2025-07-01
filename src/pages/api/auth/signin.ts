@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { supabase } from "@/lib/supabase";
 import type { Provider } from "@supabase/supabase-js";
+import { routes } from "@/model/routes";
 
 export const POST: APIRoute = async ({ request, cookies, redirect, url }) => {
   const formData = await request.formData();
@@ -45,5 +46,5 @@ export const POST: APIRoute = async ({ request, cookies, redirect, url }) => {
   cookies.set("sb-refresh-token", refresh_token, {
     path: "/",
   });
-  return redirect("/eur/dashboard");
+  return redirect(routes.dashboard);
 }; 

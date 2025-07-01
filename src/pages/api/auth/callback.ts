@@ -1,6 +1,7 @@
 // import { createServerClient, parseCookieHeader } from '@supabase/ssr'
 import type { APIRoute } from "astro";
 import { supabase } from "@/lib/supabase";
+import { routes } from "@/model/routes";
 
 export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   const authCode = url.searchParams.get("code");
@@ -24,5 +25,5 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     path: "/",
   });
 
-  return redirect("/eur/dashboard");
+  return redirect(routes.dashboard);
 };
