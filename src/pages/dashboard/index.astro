@@ -63,26 +63,26 @@ const user = {
         <nav class="mb-8 flex items-center justify-between px-4">
           <ul class="flex items-center gap-6 text-sm leading-none text-white">
             <li class="font-medium">
-              <a href="#slide-1" class="tab opacity-100">My Balance </a>
+              <a href="#balance" class="tab opacity-100">My Balance </a>
             </li>
             <li class="">
-              <a href="#slide-2" class="tab opacity-50">Upcoming Bills </a>
+              <a href="#income" class="tab opacity-50">Incoming Bills </a>
             </li>
             <li class="">
-              <a href="#slide-3" class="tab opacity-50">Transactions </a>
+              <a href="#transactions" class="tab opacity-50">Transactions </a>
             </li>
           </ul>
           <MoneySelector />
         </nav>
 
         <div class="slides h-full">
-          <div id="slide-1">
+          <div id="balance">
             <MyBalance />
           </div>
-          <div id="slide-2" class="px-4">
+          <div id="income" class="px-4">
             <UpcomingBills />
           </div>
-          <div id="slide-3" class="px-4">
+          <div id="transactions" class="px-4">
             <Transactions />
           </div>
         </div>

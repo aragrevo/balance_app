@@ -1,38 +1,52 @@
 ---
+import { routes } from "@/model/routes";
+
 const items = [
   {
     icon: `<path stroke="currentColor" stroke-width="1.5" d="M8.137 2.22a3.25 3.25 0 0 1 3.726 0l5.575 3.901a4.251 4.251 0 0 1 1.812 3.483V16A4.25 4.25 0 0 1 15 20.25h-.5c-.69 0-1.25-.56-1.25-1.25v-2.099a2.75 2.75 0 0 0-2.75-2.75h-.624a2.75 2.75 0 0 0-2.75 2.75V19c0 .69-.56 1.25-1.25 1.25H5A4.25 4.25 0 0 1 .75 16V9.604c0-1.387.676-2.688 1.813-3.483L8.136 2.22Z"/>`,
     label: "Home",
-    active: true
+    active: true,
+    href: routes.dashboard,
   },
   {
     icon: `<g stroke="currentColor" stroke-width="1.5" opacity=".5"><path d="M5.222 3.396a9.499 9.499 0 0 1 1.395-.77c1.372-.615 2.058-.922 2.97-.331.913.591.913 1.56.913 3.5v1.5c0 1.886 0 2.829.586 3.415.586.585 1.528.585 3.414.585H16c1.94 0 2.91 0 3.5.913.592.912.285 1.598-.33 2.97a9.498 9.498 0 0 1-10.523 5.435A9.5 9.5 0 0 1 5.222 3.396Z"/><path d="M20.446 5.864a8.026 8.026 0 0 0-4.515-4.515C14.39.742 13 2.14 13 3.795v4a1 1 0 0 0 1 1h4c1.657 0 3.053-1.389 2.446-2.93Z"/></g>`,
     label: "Analytics",
-    active: false
+    active: false,
+    href: routes.dashboard,
   },
   {
     icon: `<g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" opacity=".5"><path d="M19.954 4.029H3.227c-.904 0-1.636.932-1.636 2.083v12.497c0 1.15.732 2.082 1.636 2.082h16.727c.904 0 1.637-.932 1.637-2.082V6.112c0-1.15-.733-2.083-1.637-2.083ZM21.59 10h-20"/><circle cx="13.591" cy="16" r="2"/><circle cx="17.591" cy="16" r="2"/></g>`,
     label: "Cards",
-    active: false
+    active: false,
+    href: routes.dashboard,
   },
   {
     icon: `<g stroke="currentColor" stroke-width="1.5" opacity=".5"><rect width="7.926" height="7.926" x="8.628" y="2.701" rx="3.963"/><path d="M12.59 13.446c1.93 0 3.644.545 4.856 1.384 1.215.841 1.865 1.927 1.865 3.029a3.415 3.415 0 0 1-3.415 3.415h-7.11A2.915 2.915 0 0 1 5.87 18.36c0-1.393.69-2.599 1.884-3.48 1.202-.889 2.907-1.433 4.836-1.433Z"/></g>`,
     label: "Profile",
-    active: false
-  }
+    active: false,
+    href: routes.dashboard,
+  },
 ];
 ---
 
-<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#070417]/90 backdrop-blur-xl border-t border-white/10 rounded-b-2xl">
+<nav
+  class="fixed right-0 bottom-0 left-0 mx-auto max-w-md rounded-b-2xl border-t border-white/10 bg-[#070417]/90 backdrop-blur-xl"
+>
   <div class="container mx-auto px-5">
     <div class="flex justify-between py-5">
-      {items.map(item => (
-        <button class={`flex flex-col items-center gap-1 ${item.active ? 'text-white' : 'text-gray-500'}`}>
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-            <Fragment set:html={item.icon} />
-          </svg>
-        </button>
-      ))}
+      {
+        items.map((item) => (
+          <a
+            href={item.href}
+            class={`flex flex-col items-center gap-1 ${item.active ? "text-white" : "text-gray-500"}`}
+          >
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+              <Fragment set:html={item.icon} />
+            </svg>
+          </a>
+        ))
+      }
     </div>
   </div>
-</nav> 
+</nav>
+
