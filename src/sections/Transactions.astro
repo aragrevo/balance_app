@@ -39,7 +39,7 @@ const { data, error } = await getTransactions(
     <h2 class="mb-3 text-4xl font-medium text-white">Transactions</h2>
   </div>
 
-  <div class="scrollbar-hide max-h-[75dvh] space-y-4 overflow-y-auto pb-14">
+  <div class="scrollbar-hide max-h-[65dvh] space-y-4 overflow-y-auto pb-14">
     {
       data?.map((transaction: Transaction) => {
         const description = transaction.observation
