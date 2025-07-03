@@ -1,7 +1,8 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "@/styles/global.css";
 import "@fontsource-variable/plus-jakarta-sans";
-import { ClientRouter } from "astro:transitions";
+import Spinner from "@/components/Spinner.astro";
 
 interface Props {
   title?: string;
@@ -24,5 +25,11 @@ const { title = "Balance App" } = Astro.props;
     class="border-tertiary shadow-tertiary relative z-0 mx-auto min-h-screen max-w-md overflow-x-hidden rounded-2xl border-1 bg-[#000033] shadow-2xl"
   >
     <slot />
+    <div
+      id="spinner-overlay"
+      class="absolute inset-0 hidden items-center justify-center bg-black/50"
+    >
+      <Spinner class="h-10 w-10" />
+    </div>
   </body>
 </html>
