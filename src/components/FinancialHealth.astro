@@ -1,36 +1,120 @@
 ---
+import { getBalance } from "@/services/balance.service";
+import { getStartOfMonth, getEndOfMonth } from "@/lib/date";
+import { MoneyTypes } from "@/model/money-types.enum";
+import { getTransactions } from "@/services/transaction.service";
+import { getIncomes } from "@/services/incomes.service";
+import { formatMoney } from "@/lib/formatter";
+
+const startDate = getStartOfMonth().toISOString();
+const endDate = getEndOfMonth().toISOString();
+
+const { data: eurBalance, error: eurError } = await getBalance(
+  startDate,
+  endDate,
+  MoneyTypes.EUR,
+);
+const { data: copBalance, error: copError } = await getBalance(
+  startDate,
+  endDate,
+  MoneyTypes.COP,
+);
+
+const { data: eurTransactions, error: eurTransactionsError } =
+  await getTransactions(startDate, endDate, MoneyTypes.EUR);
+
+const { data: copTransactions, error: copTransactionsError } =
+  await getTransactions(startDate, endDate, MoneyTypes.COP);
+
+const { data: incomes, error: incomesError } = await getIncomes(
+  startDate,
+  endDate,
+);
+
 const days = [
-  { day: "Mon", values: [20, 30, 40, 45, 50] },
-  { day: "Sun", values: [30, 35, 45, 20, 25] },
-  { day: "Thu", values: [25, 30, 35, 40, 45] },
-  { day: "Wed", values: [40, 45, 35, 30, 20] },
-  { day: "Thr", values: [35, 30, 25, 20, 15] }
+  {
+    day: "EUR Incomes",
+    values:
+      incomes?.filter((t) => t.money === MoneyTypes.EUR).map((t) => t.cost) ||
+      [],
+  },
+  { day: "EUR Expenses", values: eurTransactions?.map((t) => t.cost) || [] },
+  {
+    day: "COP Incomes",
+    values:
+      incomes?.filter((t) => t.money === MoneyTypes.COP).map((t) => t.cost) ||
+      [],
+  },
+  { day: "COP Expenses", values: copTransactions?.map((t) => t.cost) || [] },
 ];
 ---
 
-<div class="text-white">
-  <div class="flex items-center justify-between mb-4">
+<section class="text-white">
+  <header class="mb-4 flex items-center justify-between">
     <h3 class="text-2xl font-medium">Financial health</h3>
     <div class="flex items-center gap-2">
-      <span class="text-gray-400">Latest 7 days</span>
-      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M7 14l5-5 5 5H7z"/>
+      <span class="text-gray-400">Latest 30 days</span>
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 14l5-5 5 5H7z"></path>
       </svg>
     </div>
-  </div>
-
-  <div class="flex items-end justify-between h-64 gap-4">
-    {days.map(({ day, values }) => (
-      <div class="flex-1 flex flex-col items-center gap-2">
-        <div class="w-full flex flex-col gap-1">
-          {values.map(value => (
-            <div 
-              class={`w-full h-3 rounded-sm ${value > 35 ? 'bg-indigo-500/20' : 'bg-red-500/20'}`}
-            />
-          ))}
+  </header>
+  <div class="grid grid-cols-2 gap-3">
+    <article
+      class="flex flex-col justify-center overflow-hidden rounded-md border border-white/10 bg-gradient-to-br from-[#151521] via-[#000033] to-transparent p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-xs"
+    >
+      <h6 class="text-lg font-bold">EUR</h6>
+      <div class="flex items-center gap-2">
+        <div class="flex flex-col items-center gap-2">
+          <span class="text-sm text-white/50">Incomes</span>
+          <span class="font-medium">{formatMoney(eurBalance?.incomes)}</span>
         </div>
-        <span class="text-sm text-gray-400">{day}</span>
+        <div class="flex-1"></div>
+        <div class="flex flex-col items-center gap-2">
+          <span class="text-sm text-white/50">Expenses</span>
+          <span class="font-medium">{formatMoney(eurBalance?.expenses)}</span>
+        </div>
       </div>
-    ))}
+    </article>
+
+    <article
+      class="flex flex-col justify-center overflow-hidden rounded-md border border-white/10 bg-gradient-to-br from-[#010101] via-[#090909] to-transparent p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
+    >
+      <h6 class="text-lg font-bold">COP</h6>
+      <div class="flex items-center gap-2">
+        <div class="flex flex-col items-center gap-2">
+          <span class="text-sm text-white/50">Incomes</span>
+          <span class="font-medium">{formatMoney(copBalance?.incomes)}</span>
+        </div>
+        <div class="flex-1"></div>
+        <div class="flex flex-col items-center gap-2">
+          <span class="text-sm text-white/50">Expenses</span>
+          <span class="font-medium">{formatMoney(copBalance?.expenses)}</span>
+        </div>
+      </div>
+    </article>
+
+    <article
+      class="col-span-2 flex items-end justify-between gap-6 overflow-hidden rounded-md border border-white/10 bg-transparent bg-gradient-to-br p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
+    >
+      {
+        days.map(({ day, values }) => (
+          <div class="flex flex-1 flex-col items-center gap-2">
+            <div class="flex w-full flex-col gap-1">
+              {values.map((value) => (
+                <div
+                  class={`group relative h-3.5 w-full rounded-sm ${value < 35 ? "bg-indigo-500/20" : "bg-red-500/20"}`}
+                >
+                  <tool-tip class="pointer-events-none absolute bottom-full left-[12.5%] z-10 rounded-md bg-gray-800 px-2 py-0.5 text-xs text-white opacity-0 shadow transition-opacity duration-300 select-none group-hover:opacity-100 group-active:opacity-100">
+                    {value}
+                  </tool-tip>
+                </div>
+              ))}
+            </div>
+            <span class="text-sm text-gray-400">{day}</span>
+          </div>
+        ))
+      }
+    </article>
   </div>
-</div> 
+</section>

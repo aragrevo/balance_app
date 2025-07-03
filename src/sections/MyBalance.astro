@@ -2,35 +2,19 @@
 import ActionButton from "@/components/ActionButton.astro";
 import BalanceCard from "@/components/BalanceCard.astro";
 import FinancialHealth from "@/components/FinancialHealth.astro";
-import TransferList from "@/components/TransferList.astro";
-import UserAvatar from "@/components/UserAvatar.astro";
 import { MoneyTypes } from "@/model/money-types.enum";
-import { getExpenseCategories } from "@/services/admin.service";
 import { getBalance } from "@/services/balance.service";
+import { getEndOfMonth, getStartOfMonth } from "@/lib/date";
 
 const moneyType =
   (Astro.cookies.get("money")?.value as MoneyTypes) || MoneyTypes.EUR;
 
-const currentDate = new Date();
-const startDate = new Date(
-  currentDate.getFullYear(),
-  currentDate.getMonth(),
-  1,
-);
-const endDate = new Date(
-  currentDate.getFullYear(),
-  currentDate.getMonth() + 1,
-  0,
-);
-const { data, error } = await getBalance(
-  startDate.toISOString(),
-  endDate.toISOString(),
-  moneyType,
-);
+const startDate = getStartOfMonth().toISOString();
+const endDate = getEndOfMonth().toISOString();
+const { data, error } = await getBalance(startDate, endDate, moneyType);
 if (error) {
   console.error(error);
 }
-console.log(data);
 
 const balance = data?.incomes - data?.expenses;
 const percentage = (balance / data?.incomes) * 100;
@@ -43,8 +27,12 @@ const percentage = (balance / data?.incomes) * 100;
   <!-- Action Buttons -->
   <div class="mt-8 flex gap-4">
     <ActionButton text="Pay" icon="send" class="bg-secondary btn-pay" />
-    <ActionButton text="Receive" icon="receive" class="bg-quaternary" />
-    <ActionButton text="Add" icon="add" class="bg-quaternary" />
+    <ActionButton
+      text="Receive"
+      icon="receive"
+      class="bg-quaternary btn-receive"
+    />
+    <!-- <ActionButton text="Add" icon="add" class="bg-quaternary" /> -->
   </div>
 
   <!-- Transfer List -->
@@ -58,20 +46,23 @@ const percentage = (balance / data?.incomes) * 100;
   </div>
 </section>
 
-<style>
-  .custom-select {
-    &,
-    &::picker(select) {
-      appearance: base-select;
-    }
-  }
-</style>
-
 <script>
   import { $ } from "@/lib/selector";
 
-  const showAside = () => {
-    const aside = $("#pay-form");
+  const showPayAside = () => {
+    const aside = $("#pay-drawer");
+    aside.classList.remove("top-100");
+    aside.classList.remove("bottom-100");
+    aside.classList.add("bottom-0");
+    aside.classList.add("top-0");
+    setTimeout(() => {
+      aside.classList.remove("invisible");
+      aside.classList.remove("translate-y-full");
+    }, 100);
+  };
+
+  const showReceiveAside = () => {
+    const aside = $("#receive-drawer");
     aside.classList.remove("top-100");
     aside.classList.remove("bottom-100");
     aside.classList.add("bottom-0");
@@ -84,9 +75,14 @@ const percentage = (balance / data?.incomes) * 100;
 
   document.addEventListener("astro:page-load", () => {
     const payButton = $(".btn-pay");
+    const receiveButton = $(".btn-receive");
 
     payButton.addEventListener("click", () => {
-      showAside();
+      showPayAside();
+    });
+
+    receiveButton.addEventListener("click", () => {
+      showReceiveAside();
     });
   });
 </script>
