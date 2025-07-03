@@ -71,7 +71,7 @@ const { data, error } = await getTransactions(
                 </div>
               </div>
               <span class="font-medium text-white">
-                {formatMoney(transaction.cost, transaction.money)}
+                {formatMoney(transaction.cost, transaction.money.toUpperCase())}
               </span>
             </div>
           </div>

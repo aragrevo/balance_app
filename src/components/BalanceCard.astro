@@ -4,16 +4,19 @@ import { formatMoney, formatNumber } from "@/lib/formatter";
 interface Props {
   balance: number;
   percentage: number;
+  moneyType: string;
 }
 
-const { balance, percentage } = Astro.props;
+const { balance, percentage, moneyType } = Astro.props;
 ---
 
 <article class="flex items-center justify-between">
   <div class="text-white">
     <h2 class="mb-3 text-4xl font-medium">Your Balance</h2>
     <div class="flex items-center gap-2">
-      <span class="text-3xl font-medium">{formatMoney(balance)}</span>
+      <span class="text-3xl font-medium"
+        >{formatMoney(balance, moneyType.toUpperCase())}</span
+      >
       <span
         class="ml-2 rounded-full bg-emerald-400/20 px-2 py-1 text-sm text-emerald-400"
       >

@@ -67,12 +67,16 @@ const days = [
       <div class="flex items-center gap-2">
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Incomes</span>
-          <span class="font-medium">{formatMoney(eurBalance?.incomes)}</span>
+          <span class="font-medium"
+            >{formatMoney(eurBalance?.incomes, "EUR")}</span
+          >
         </div>
         <div class="flex-1"></div>
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Expenses</span>
-          <span class="font-medium">{formatMoney(eurBalance?.expenses)}</span>
+          <span class="font-medium"
+            >{formatMoney(eurBalance?.expenses, "EUR")}</span
+          >
         </div>
       </div>
     </article>
@@ -84,12 +88,15 @@ const days = [
       <div class="flex items-center gap-2">
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Incomes</span>
-          <span class="font-medium">{formatMoney(copBalance?.incomes)}</span>
+          <span class="font-medium"
+            >{formatMoney(copBalance?.incomes, "COP")}</span
+          >
         </div>
-        <div class="flex-1"></div>
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Expenses</span>
-          <span class="font-medium">{formatMoney(copBalance?.expenses)}</span>
+          <span class="font-medium"
+            >{formatMoney(copBalance?.expenses, "COP")}</span
+          >
         </div>
       </div>
     </article>

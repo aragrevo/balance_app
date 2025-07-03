@@ -7,11 +7,12 @@ export const formatDate = (date) => {
   });
 };
 
-export const formatMoney = (value, currency = 'USD') => {
+export const formatMoney = (value, currency = 'EUR') => {
     return Intl.NumberFormat('es-CO', {
         style: 'currency',
         currency,
       currencyDisplay: 'narrowSymbol',
+      maximumFractionDigits: currency === 'COP' ? 0 : 2,
     }).format(value);
 }
 
