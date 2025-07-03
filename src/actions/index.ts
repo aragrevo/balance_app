@@ -1,6 +1,7 @@
 import { MoneyTypes } from '@/model/money-types.enum';
+import { saveIncome } from '@/services/incomes.service';
 import { saveTransaction } from '@/services/transaction.service';
-import { defineAction } from 'astro:actions';
+import { ActionError, defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
 
 export const server = {
@@ -33,5 +34,24 @@ export const server = {
             });
             return { data: input.money };
         }
-    })
+    }),
+    saveIncome: defineAction({
+        accept: 'form',
+        input: z.object({
+            amount: z.number().min(1),
+            money: z.nativeEnum(MoneyTypes),
+            description: z.string(),
+        }),
+        handler: async (input, context) => {
+            const { data, error } = await saveIncome(input);
+
+            if (error) {
+                throw new ActionError({
+                    code: "BAD_REQUEST",
+                    message: "Error saving income",
+                });
+            }
+            return { data };
+        },
+    }),
 }
