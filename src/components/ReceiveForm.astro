@@ -1,36 +1,29 @@
 ---
-import { getExpenseCategories } from "@/services/admin.service";
 import { MoneyTypes } from "@/model/money-types.enum";
+import { getIncomeCategories } from "@/services/admin.service";
 import Select from "./Select.astro";
 
 const moneyType = (Astro.params.money as MoneyTypes) || MoneyTypes.EUR;
 
 const { data: categories, error: categoriesError } =
-  await getExpenseCategories();
+  await getIncomeCategories();
 if (categoriesError) {
   console.error(categoriesError);
 }
 ---
 
-<h2 class="mb-4 text-4xl font-medium text-white">Pay</h2>
+<h2 class="mb-4 text-4xl font-medium text-white">Receive</h2>
 
-<form id="pay-form-form" class="mb-16 flex flex-col gap-12">
+<form id="receive-form" class="mb-16 flex flex-col gap-12">
   <div class="flex flex-col gap-8">
     <input type="hidden" name="money" value={moneyType} />
     <Select
-      id="pay-form-description"
+      id="receive-form-description"
       name="description"
       categories={categories}
     />
     <input
-      id="pay-form-observation"
-      type="text"
-      name="observation"
-      placeholder="Observation"
-      class="hidden rounded-full border border-white/80 bg-transparent px-4 py-2 text-xl text-white placeholder:text-white/30 focus:outline-none"
-    />
-    <input
-      type="text"
+      type="number"
       name="amount"
       class="mt-2 rounded-lg border-0 p-2 text-center text-4xl text-white placeholder:text-white/30 focus:outline-none"
       placeholder="500.00"
@@ -38,9 +31,9 @@ if (categoriesError) {
   </div>
   <button
     type="submit"
-    class="bg-secondary text-tertiary mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80"
+    class="bg-quaternary text-tertiary mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80"
   >
-    Pay
+    Receive
   </button>
 </form>
 
@@ -50,27 +43,18 @@ if (categoriesError) {
   import { toast } from "@/services/toast.service";
   import { actions } from "astro:actions";
   import { navigate } from "astro:transitions/client";
-  const form = $("#pay-form-form") as HTMLFormElement;
 
   document.addEventListener("astro:page-load", () => {
-    const description = $("#pay-form-description") as HTMLSelectElement;
-    const observation = $("#pay-form-observation") as HTMLInputElement;
-    description.addEventListener("change", () => {
-      const selectedOption = description.options[description.selectedIndex];
-      observation.value = "";
-      observation.classList.add("hidden");
-      if (selectedOption.value === "shop") {
-        observation.classList.remove("hidden");
-      }
-    });
+    const form = $("#receive-form") as HTMLFormElement;
+
     form?.addEventListener("submit", async (event) => {
       event.preventDefault();
       const formData = new FormData(form);
-      const { error } = await actions.saveExpense(formData);
+      const { data, error } = await actions.saveIncome(formData);
       console.log(error);
       if (error) {
         const msg = (error as any).issues.map((e: any) => e.message).join(", ");
-        toast.show(`Error saving transaction: ${msg}`);
+        toast.show(`Error saving income: ${msg}`);
         setTimeout(() => {
           toast.hide();
         }, 5000);
