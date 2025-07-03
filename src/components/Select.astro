@@ -7,28 +7,28 @@ const { categories, id, name } = Astro.props;
   name={name}
   class="custom-select rounded-full border border-white/80 bg-transparent px-4 py-2 text-xl text-white placeholder:text-white/30 focus:outline-none"
 >
-  <option
-    selected
-    disabled
-    class="rounded-t-2xl bg-[#070417]/90 px-2 py-1 text-white/20"
+  <div
+    class="flex max-w-64 flex-col gap-2 overflow-hidden rounded-xl bg-[#242832] px-4 py-2"
   >
-    Choose a category
-  </option>
-  {
-    categories?.map((category) => (
-      <option
-        class="hover:bg-primary bg-[#070417] px-2 py-1 text-white backdrop-blur-2xl transition-all duration-300 last-of-type:rounded-b-xl hover:cursor-pointer hover:text-gray-500"
-        value={category.id}
-      >
-        <img
-          src={`/icons/${category.id}.svg`}
-          alt={category.name}
-          class="h-6 w-6"
-        />
-        {category.name}
-      </option>
-    ))
-  }
+    <option selected disabled class="px-2 py-1 text-white/20">
+      Choose a category
+    </option>
+    {
+      categories?.map((category) => (
+        <option
+          class="max-w-64 rounded-md bg-[#242832] px-2 py-1 text-base font-bold text-[#7e8590] backdrop-blur-2xl transition-all duration-300 hover:translate-x-px hover:-translate-y-px hover:cursor-pointer hover:bg-[#382d47d5] hover:text-white"
+          value={category.id}
+        >
+          <img
+            src={`/icons/${category.id}.svg`}
+            alt={category.name}
+            class="h-6 w-6"
+          />
+          {category.name}
+        </option>
+      ))
+    }
+  </div>
 </select>
 
 <style>
@@ -45,6 +45,7 @@ const { categories, id, name } = Astro.props;
       border: none;
       opacity: 0;
       transition: all 0.4s allow-discrete;
+      max-width: 200px;
     }
     &::picker(select):popover-open {
       opacity: 1;
@@ -56,6 +57,9 @@ const { categories, id, name } = Astro.props;
     }
     &::picker(select) {
       top: calc(anchor(bottom) + 5px);
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 200px;
     }
   }
 </style>
