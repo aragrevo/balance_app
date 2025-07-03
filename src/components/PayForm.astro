@@ -1,9 +1,10 @@
 ---
 import { getExpenseCategories } from "@/services/admin.service";
 import { MoneyTypes } from "@/model/money-types.enum";
-import Select from "./Select.astro";
+import Select from "@/components/Select.astro";
+import Spinner from "@/components/Spinner.astro";
 
-const moneyType = (Astro.params.money as MoneyTypes) || MoneyTypes.EUR;
+const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
 
 const { data: categories, error: categoriesError } =
   await getExpenseCategories();
@@ -38,8 +39,11 @@ if (categoriesError) {
   </div>
   <button
     type="submit"
-    class="bg-secondary text-tertiary mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80"
+    class="group bg-secondary text-tertiary disabled:gray mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
   >
+    <span class="hidden items-center gap-2 group-disabled:flex">
+      <Spinner class="h-4 w-4" />
+    </span>
     Pay
   </button>
 </form>
@@ -50,9 +54,10 @@ if (categoriesError) {
   import { toast } from "@/services/toast.service";
   import { actions } from "astro:actions";
   import { navigate } from "astro:transitions/client";
-  const form = $("#pay-form-form") as HTMLFormElement;
 
   document.addEventListener("astro:page-load", () => {
+    const form = $("#pay-form-form") as HTMLFormElement;
+    const button = form?.querySelector("button") as HTMLButtonElement;
     const description = $("#pay-form-description") as HTMLSelectElement;
     const observation = $("#pay-form-observation") as HTMLInputElement;
     description.addEventListener("change", () => {
@@ -65,15 +70,14 @@ if (categoriesError) {
     });
     form?.addEventListener("submit", async (event) => {
       event.preventDefault();
+      button.disabled = true;
       const formData = new FormData(form);
       const { error } = await actions.saveExpense(formData);
       console.log(error);
       if (error) {
+        button.disabled = false;
         const msg = (error as any).issues.map((e: any) => e.message).join(", ");
-        toast.show(`Error saving transaction: ${msg}`);
-        setTimeout(() => {
-          toast.hide();
-        }, 5000);
+        toast.showHide(`Error saving transaction: ${msg}`);
         return;
       }
       navigate(routes.dashboard);
