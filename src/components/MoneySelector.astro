@@ -55,9 +55,10 @@ const urlsMoney = [
 </div>
 
 <script>
-  import { $$ } from "@/lib/selector";
+  import { $, $$ } from "@/lib/selector";
   import { actions } from "astro:actions";
   import { navigate } from "astro:transitions/client";
+  import { overlay } from "@/services/overlay.service";
   document.addEventListener("astro:page-load", () => {
     const btnMoney = $$("#btn-money");
     const menuMoney = $$("#menu-money");
@@ -75,6 +76,7 @@ const urlsMoney = [
         const { error } = await actions.setMoney({ money });
         console.log(error);
         if (!error) {
+          overlay.show();
           navigate(`/`);
         }
       });
