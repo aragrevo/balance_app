@@ -22,7 +22,11 @@ const percentage = (balance / data?.incomes) * 100;
 
 <section class="h-full px-4">
   <!-- Balance Card -->
-  <BalanceCard balance={balance} percentage={percentage} />
+  <BalanceCard
+    balance={balance}
+    percentage={percentage}
+    moneyType={moneyType}
+  />
 
   <!-- Action Buttons -->
   <div class="mt-8 flex gap-4">
@@ -42,7 +46,7 @@ const percentage = (balance / data?.incomes) * 100;
 
   <!-- Financial Health -->
   <div class="mt-12">
-    <FinancialHealth />
+    <FinancialHealth server:defer />
   </div>
 </section>
 
