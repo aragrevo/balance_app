@@ -1,0 +1,61 @@
+---
+const { categories, id, name } = Astro.props;
+---
+
+<select
+  id={id}
+  name={name}
+  class="custom-select rounded-full border border-white/80 bg-transparent px-4 py-2 text-xl text-white placeholder:text-white/30 focus:outline-none"
+>
+  <option
+    selected
+    disabled
+    class="rounded-t-2xl bg-[#070417]/90 px-2 py-1 text-white/20"
+  >
+    Choose a category
+  </option>
+  {
+    categories?.map((category) => (
+      <option
+        class="hover:bg-primary bg-[#070417] px-2 py-1 text-white backdrop-blur-2xl transition-all duration-300 last-of-type:rounded-b-xl hover:cursor-pointer hover:text-gray-500"
+        value={category.id}
+      >
+        <img
+          src={`/icons/${category.id}.svg`}
+          alt={category.name}
+          class="h-6 w-6"
+        />
+        {category.name}
+      </option>
+    ))
+  }
+</select>
+
+<style>
+  .custom-select {
+    &,
+    &::picker(select) {
+      appearance: base-select;
+    }
+  }
+
+  .custom-select {
+    &::picker(select) {
+      background-color: transparent;
+      border: none;
+      opacity: 0;
+      transition: all 0.4s allow-discrete;
+    }
+    &::picker(select):popover-open {
+      opacity: 1;
+    }
+    @starting-style {
+      &::picker(select):popover-open {
+        opacity: 0;
+      }
+    }
+    &::picker(select) {
+      top: calc(anchor(bottom) + 5px);
+    }
+  }
+</style>
