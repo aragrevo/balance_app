@@ -4,18 +4,24 @@ import { $ } from "@/lib/selector";
 export const toast = {
     show: (message: string) => {
         const toastMessage = $("#toast-message") as HTMLDivElement;
-        const toast = $("#toast-default") as HTMLDivElement;
+        const t = $("#toast-default") as HTMLDivElement;
         toastMessage.textContent = message;
-        toast.classList.remove("opacity-0");
-        toast.classList.remove("absolute");
-        toast.classList.remove("-z-50");
-        toast.classList.add("relative");
+        t.classList.remove("opacity-0");
+        // toast.classList.remove("absolute");
+        t.classList.remove("-z-50");
+        // toast.classList.add("relative");
     },
     hide: () => {
-        const toast = $("#toast-default") as HTMLDivElement;
-        toast.classList.remove("relative");
-        toast.classList.add("absolute");
-        toast.classList.add("opacity-0");
-        toast.classList.add("-z-50");
+        const t = $("#toast-default") as HTMLDivElement;
+        // toast.classList.remove("relative");
+        // toast.classList.add("absolute");
+        t.classList.add("opacity-0");
+        t.classList.add("-z-50");
+    },
+    showHide: (message: string, duration: number = 5000) => {
+        toast.show(message);
+        setTimeout(() => {
+            toast.hide();
+        }, duration);
     }
 }
