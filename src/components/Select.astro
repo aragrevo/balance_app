@@ -8,9 +8,13 @@ const { categories, id, name } = Astro.props;
   class="custom-select rounded-full border border-white/80 bg-transparent px-4 py-2 text-xl text-white placeholder:text-white/30 focus:outline-none"
 >
   <div
-    class="flex max-w-64 flex-col gap-2 overflow-hidden rounded-xl bg-[#242832] px-4 py-2"
+    class="flex max-w-56 flex-col gap-2 overflow-hidden rounded-xl bg-[#242832] px-4 py-2"
   >
-    <option selected disabled class="px-2 py-1 text-white/20">
+    <option
+      selected
+      disabled
+      class="px-2 py-1 text-center text-sm text-white/20"
+    >
       Choose a category
     </option>
     {
