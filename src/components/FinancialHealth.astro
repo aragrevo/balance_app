@@ -31,9 +31,9 @@ const { data: incomes, error: incomesError } = await getIncomes(
   endDate,
 );
 
-console.log("incomes", incomes);
-console.log("eurTransactions", eurTransactions);
-console.log("copTransactions", copTransactions);
+console.log("incomes", incomes, incomesError);
+console.log("eurTransactions", eurTransactions, eurTransactionsError);
+console.log("copTransactions", copTransactions, copTransactionsError);
 
 const days = [
   {
