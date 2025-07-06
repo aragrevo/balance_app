@@ -1,0 +1,58 @@
+---
+import DashboardLayout from "@/layouts/DashboardLayout.astro";
+import UserAvatar from "@/components/UserAvatar.astro";
+import MoneySelector from "@/components/MoneySelector.astro";
+import DonutChart from "@/components/DonutChart.astro";
+import { getBalance } from "@/services/balance.service";
+import type { MoneyTypes } from "@/model/money-types.enum";
+import { getEndOfMonth, getStartOfMonth } from "@/lib/date";
+
+const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
+
+const startDate = getStartOfMonth().toISOString();
+const endDate = getEndOfMonth().toISOString();
+const { data, error } = await getBalance(startDate, endDate, moneyType);
+if (error) {
+  console.error(error);
+}
+
+const chartData = [
+  {
+    label: "Expenses",
+    value: data?.expenses,
+    color: "#FF6B6B", // Salmón claro
+  },
+  {
+    label: "Income",
+    value: data?.incomes,
+    color: "#A5B4FC", // Coral rojo
+  },
+];
+---
+
+<DashboardLayout title="Analytics | Finance Tracker">
+  <div class="h-full">
+    <div class="container mx-auto">
+      <!-- Header -->
+      <header class="flex items-center justify-between px-4 py-6">
+        <div class="flex items-center gap-3">
+          <UserAvatar transition:name="user-avatar" />
+        </div>
+      </header>
+
+      <div class="flex w-full items-center justify-between px-4">
+        <h2 class="mb-0 text-4xl font-medium text-white">Analytics</h2>
+        <MoneySelector />
+      </div>
+
+      <div class="scrollbar-hide max-h-[65dvh] space-y-4 overflow-y-auto pb-14">
+        <div class="bg-navy-800 rounded-lg p-6 shadow-lg">
+          <h2 class="mb-6 text-xl text-white">Distribution Overview</h2>
+          <div class="flex justify-center">
+            <DonutChart data={chartData} size={300} thickness={50} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DashboardLayout>

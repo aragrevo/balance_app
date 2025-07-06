@@ -1,0 +1,108 @@
+---
+interface Props {
+  data: {
+    label: string;
+    value: number;
+    color: string;
+  }[];
+  size?: number;
+  thickness?: number;
+}
+
+const { data, size = 200, thickness = 40 } = Astro.props;
+
+const total = data.reduce((sum, item) => sum + item.value, 0);
+const radius = size / 2;
+const baseInnerRadius = radius - thickness;
+let currentAngle = -Math.PI / 2; // Comenzamos desde arriba (-90 grados)
+
+const paths = data.map((item, idx) => {
+  const percentage = item.value / total;
+  const angle = 2 * Math.PI * percentage;
+  const padding = 0.02; // Espacio entre segmentos
+  const radiusArc = 25;
+
+  // Ajustamos el radio interior para cada segmento
+  const innerRadius =
+    idx === 0
+      ? baseInnerRadius - thickness * 0.15 // El primer segmento es más grueso
+      : baseInnerRadius;
+
+  // Calcular puntos del arco con padding
+  const startAngle = currentAngle + padding;
+  const endAngle = currentAngle + angle - padding;
+
+  // Puntos del arco exterior
+  const startX = radius + radius * Math.cos(startAngle);
+  const startY = radius + radius * Math.sin(startAngle);
+  const endX = radius + radius * Math.cos(endAngle);
+  const endY = radius + radius * Math.sin(endAngle);
+
+  // Puntos del arco interior
+  const innerStartX = radius + innerRadius * Math.cos(startAngle);
+  const innerStartY = radius + innerRadius * Math.sin(startAngle);
+  const innerEndX = radius + innerRadius * Math.cos(endAngle);
+  const innerEndY = radius + innerRadius * Math.sin(endAngle);
+
+  // Crear path con arcos más pronunciados
+  const largeArcFlag = percentage > 0.5 ? 1 : 0;
+
+  // Para el primer segmento, usamos un arco más pronunciado
+  const path = [
+    `M ${startX} ${startY}`, // Punto inicial
+    `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`, // Arco exterior
+    `A ${radiusArc} ${radiusArc} 0 0 1 ${innerEndX} ${innerEndY}`, // Curva hacia interior
+    `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${innerStartX} ${innerStartY}`, // Arco interior
+    `A ${radiusArc} ${radiusArc} 0 0 1 ${startX} ${startY}`, // Curva hacia exterior
+    "Z", // Cerrar path
+  ].join(" ");
+
+  const result = {
+    path,
+    color: item.color,
+  };
+
+  currentAngle += angle;
+  return result;
+});
+
+// Calcular el porcentaje más grande para mostrarlo en el centro
+const maxPercentage = Math.max(...data.map((item) => item.value / total));
+const percentageToShow = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 0,
+}).format(maxPercentage);
+---
+
+<div class="flex flex-col items-center justify-center">
+  <div class="relative inline-block">
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} class="">
+      {/* Primero renderizamos todos los segmentos excepto el primero */}
+      {paths.slice(1).map(({ path, color }) => <path d={path} fill={color} />)}
+      {/* Luego renderizamos el primer segmento para que quede encima */}
+      <path d={paths[0].path} fill={paths[0].color}></path>
+    </svg>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <span class="text-2xl font-bold text-white">{percentageToShow}</span>
+    </div>
+  </div>
+
+  <div class="mt-4 flex items-center justify-between gap-8">
+    {
+      data.map((item) => (
+        <div class="flex items-start gap-3">
+          <span
+            class="mt-2 h-1.5 w-8 rounded-full"
+            style={`background-color: ${item.color}`}
+          />
+          <div class="flex flex-col items-start">
+            <span class="text-sm text-gray-400">{item.label}</span>
+            <span class="text-lg font-semibold text-white">
+              ${new Intl.NumberFormat("en-US").format(item.value)}
+            </span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
