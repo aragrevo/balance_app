@@ -9,47 +9,47 @@ import { formatNumber } from "@/lib/formatter";
 const startDate = getStartOfMonth().toISOString();
 const endDate = getEndOfMonth().toISOString();
 
-const { data: eurBalance, error: eurError } = await getBalance(
-  startDate,
-  endDate,
-  MoneyTypes.EUR,
-);
-const { data: copBalance, error: copError } = await getBalance(
-  startDate,
-  endDate,
-  MoneyTypes.COP,
-);
+const [
+  eurBalanceData,
+  copBalanceData,
+  eurTransactionsData,
+  copTransactionsData,
+  incomesData,
+] = await Promise.all([
+  getBalance(startDate, endDate, MoneyTypes.EUR),
+  getBalance(startDate, endDate, MoneyTypes.COP),
+  getTransactions(startDate, endDate, MoneyTypes.EUR),
+  getTransactions(startDate, endDate, MoneyTypes.COP),
+  getIncomes(startDate, endDate),
+]);
 
+const { data: eurBalance, error: eurError } = eurBalanceData;
+const { data: copBalance, error: copError } = copBalanceData;
 const { data: eurTransactions, error: eurTransactionsError } =
-  await getTransactions(startDate, endDate, MoneyTypes.EUR);
-
+  eurTransactionsData;
 const { data: copTransactions, error: copTransactionsError } =
-  await getTransactions(startDate, endDate, MoneyTypes.COP);
-
-const { data: incomes, error: incomesError } = await getIncomes(
-  startDate,
-  endDate,
-);
+  copTransactionsData;
+const { data: incomes, error: incomesError } = incomesData;
 
 console.log("incomes", incomes, incomesError);
 console.log("eurTransactions", eurTransactions, eurTransactionsError);
 console.log("copTransactions", copTransactions, copTransactionsError);
 
-const days = [
+const amounts = [
   {
-    day: "EUR Incomes",
+    type: "EUR Incomes",
     values:
       incomes?.filter((t) => t.money === MoneyTypes.EUR).map((t) => t.cost) ||
       [],
   },
-  { day: "EUR Expenses", values: eurTransactions?.map((t) => t.cost) || [] },
+  { type: "EUR Expenses", values: eurTransactions?.map((t) => t.cost) || [] },
   {
-    day: "COP Incomes",
+    type: "COP Incomes",
     values:
       incomes?.filter((t) => t.money === MoneyTypes.COP).map((t) => t.cost) ||
       [],
   },
-  { day: "COP Expenses", values: copTransactions?.map((t) => t.cost) || [] },
+  { type: "COP Expenses", values: copTransactions?.map((t) => t.cost) || [] },
 ];
 ---
 
@@ -106,20 +106,20 @@ const days = [
       class="col-span-2 flex items-end justify-between gap-6 overflow-hidden rounded-md border border-white/10 bg-transparent bg-gradient-to-br p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
     >
       {
-        days.map(({ day, values }) => (
+        amounts.map(({ type, values }) => (
           <div class="flex flex-1 flex-col items-center gap-2">
             <div class="flex w-full flex-col gap-1">
               {values.map((value) => (
                 <div
                   class={`group relative h-3.5 w-full rounded-sm ${value < 35 ? "bg-indigo-500/20" : "bg-red-500/20"}`}
                 >
-                  <tool-tip class="pointer-events-none absolute bottom-full left-[12.5%] z-10 rounded-md bg-gray-800 px-2 py-0.5 text-xs text-white opacity-0 shadow transition-opacity duration-300 select-none group-hover:opacity-100 group-active:opacity-100">
+                  <tool-tip class="pointer-events-none absolute bottom-full left-1/2 z-10 -translate-x-1/2 rounded-md bg-gray-800 px-2 py-0.5 text-xs text-white opacity-0 shadow transition-opacity duration-300 select-none group-hover:opacity-100 group-active:opacity-100">
                     {value}
                   </tool-tip>
                 </div>
               ))}
             </div>
-            <span class="text-sm text-gray-400">{day}</span>
+            <span class="text-sm text-gray-400">{type}</span>
           </div>
         ))
       }
