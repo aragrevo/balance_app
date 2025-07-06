@@ -4,7 +4,7 @@ import { getStartOfMonth, getEndOfMonth } from "@/lib/date";
 import { MoneyTypes } from "@/model/money-types.enum";
 import { getTransactions } from "@/services/transaction.service";
 import { getIncomes } from "@/services/incomes.service";
-import { formatMoney } from "@/lib/formatter";
+import { formatNumber } from "@/lib/formatter";
 
 const startDate = getStartOfMonth().toISOString();
 const endDate = getEndOfMonth().toISOString();
@@ -68,18 +68,16 @@ const days = [
       class="flex flex-col justify-center overflow-hidden rounded-md border border-white/10 bg-gradient-to-br from-[#151521] via-[#000033] to-transparent p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-xs"
     >
       <h6 class="text-lg font-bold">EUR</h6>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center justify-between gap-2">
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Incomes</span>
-          <span class="font-medium"
-            >{formatMoney(eurBalance?.incomes, "EUR")}</span
+          <span class="font-medium">{formatNumber(eurBalance?.incomes, 2)}</span
           >
         </div>
-        <div class="flex-1"></div>
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Expenses</span>
           <span class="font-medium"
-            >{formatMoney(eurBalance?.expenses, "EUR")}</span
+            >{formatNumber(eurBalance?.expenses, 2)}</span
           >
         </div>
       </div>
@@ -89,17 +87,16 @@ const days = [
       class="flex flex-col justify-center overflow-hidden rounded-md border border-white/10 bg-gradient-to-br from-[#010101] via-[#090909] to-transparent p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
     >
       <h6 class="text-lg font-bold">COP</h6>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center justify-between gap-2">
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Incomes</span>
-          <span class="font-medium"
-            >{formatMoney(copBalance?.incomes, "COP")}</span
+          <span class="font-medium">{formatNumber(copBalance?.incomes, 0)}</span
           >
         </div>
         <div class="flex flex-col items-center gap-2">
           <span class="text-sm text-white/50">Expenses</span>
           <span class="font-medium"
-            >{formatMoney(copBalance?.expenses, "COP")}</span
+            >{formatNumber(copBalance?.expenses, 0)}</span
           >
         </div>
       </div>

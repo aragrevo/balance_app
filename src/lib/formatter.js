@@ -16,6 +16,8 @@ export const formatMoney = (value, currency = 'EUR') => {
     }).format(value);
 }
 
-export const formatNumber = (number) => {
-    return Intl.NumberFormat('es-ES').format(number);
+export const formatNumber = (number, maximumFractionDigits = 0) => {
+    return Intl.NumberFormat('es-ES', {
+      maximumFractionDigits,
+    }).format(number);
 }
