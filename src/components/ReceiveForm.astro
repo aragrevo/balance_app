@@ -3,6 +3,7 @@ import { MoneyTypes } from "@/model/money-types.enum";
 import { getIncomeCategories } from "@/services/admin.service";
 import Select from "./Select.astro";
 import Spinner from "./Spinner.astro";
+import Button from "@/components/Button.astro";
 
 const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
 console.log(moneyType);
@@ -31,15 +32,7 @@ if (categoriesError) {
       placeholder="500.00"
     />
   </div>
-  <button
-    type="submit"
-    class="group bg-quaternary text-tertiary disabled:text-gray mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <span class="hidden items-center gap-2 group-disabled:flex">
-      <Spinner class="h-4 w-4" />
-    </span>
-    Receive
-  </button>
+  <Button type="submit" class="bg-quaternary text-tertiary">Receive</Button>
 </form>
 
 <script>

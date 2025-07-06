@@ -1,0 +1,14 @@
+---
+import Spinner from "./Spinner.astro";
+const { type = "submit", class: className } = Astro.props;
+---
+
+<button
+  type={type}
+  class={`group  disabled:gray mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+>
+  <span class="hidden items-center gap-2 group-disabled:flex">
+    <Spinner class="h-4 w-4" />
+  </span>
+  <slot />
+</button>

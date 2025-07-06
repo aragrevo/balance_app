@@ -2,7 +2,7 @@
 import { getExpenseCategories } from "@/services/admin.service";
 import { MoneyTypes } from "@/model/money-types.enum";
 import Select from "@/components/Select.astro";
-import Spinner from "@/components/Spinner.astro";
+import Button from "@/components/Button.astro";
 
 const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
 
@@ -37,15 +37,7 @@ if (categoriesError) {
       placeholder="500.00"
     />
   </div>
-  <button
-    type="submit"
-    class="group bg-secondary text-tertiary disabled:gray mt-8 flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors hover:cursor-pointer hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <span class="hidden items-center gap-2 group-disabled:flex">
-      <Spinner class="h-4 w-4" />
-    </span>
-    Pay
-  </button>
+  <Button type="submit" class="bg-secondary text-tertiary">Pay</Button>
 </form>
 
 <script>
