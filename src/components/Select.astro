@@ -18,7 +18,7 @@ const { categories, id, name } = Astro.props;
       Choose a category
     </option>
     {
-      categories?.map((category) => (
+      categories?.map((category: any) => (
         <option
           class="max-w-64 rounded-md bg-[#242832] px-2 py-1 text-base font-bold text-[#7e8590] backdrop-blur-2xl transition-all duration-300 hover:translate-x-px hover:-translate-y-px hover:cursor-pointer hover:bg-[#382d47d5] hover:text-white"
           value={category.id}
