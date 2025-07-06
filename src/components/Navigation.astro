@@ -1,18 +1,20 @@
 ---
 import { routes } from "@/model/routes";
 
+const pathname = Astro.url.pathname;
+
 const items = [
   {
     icon: `<path stroke="currentColor" stroke-width="1.5" d="M8.137 2.22a3.25 3.25 0 0 1 3.726 0l5.575 3.901a4.251 4.251 0 0 1 1.812 3.483V16A4.25 4.25 0 0 1 15 20.25h-.5c-.69 0-1.25-.56-1.25-1.25v-2.099a2.75 2.75 0 0 0-2.75-2.75h-.624a2.75 2.75 0 0 0-2.75 2.75V19c0 .69-.56 1.25-1.25 1.25H5A4.25 4.25 0 0 1 .75 16V9.604c0-1.387.676-2.688 1.813-3.483L8.136 2.22Z"/>`,
     label: "Home",
-    active: true,
+    active: pathname === routes.dashboard,
     href: routes.dashboard,
   },
   {
-    icon: `<g stroke="currentColor" stroke-width="1.5" opacity=".5"><path d="M5.222 3.396a9.499 9.499 0 0 1 1.395-.77c1.372-.615 2.058-.922 2.97-.331.913.591.913 1.56.913 3.5v1.5c0 1.886 0 2.829.586 3.415.586.585 1.528.585 3.414.585H16c1.94 0 2.91 0 3.5.913.592.912.285 1.598-.33 2.97a9.498 9.498 0 0 1-10.523 5.435A9.5 9.5 0 0 1 5.222 3.396Z"/><path d="M20.446 5.864a8.026 8.026 0 0 0-4.515-4.515C14.39.742 13 2.14 13 3.795v4a1 1 0 0 0 1 1h4c1.657 0 3.053-1.389 2.446-2.93Z"/></g>`,
+    icon: `<g fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M6.222 4.601a9.5 9.5 0 0 1 1.395-.771c1.372-.615 2.058-.922 2.97-.33c.913.59.913 1.56.913 3.5v1.5c0 1.886 0 2.828.586 3.414s1.528.586 3.414.586H17c1.94 0 2.91 0 3.5.912c.592.913.285 1.599-.33 2.97a9.5 9.5 0 0 1-10.523 5.435A9.5 9.5 0 0 1 6.222 4.601Z"/><path d="M21.446 7.069a8.03 8.03 0 0 0-4.515-4.515C15.389 1.947 14 3.344 14 5v4a1 1 0 0 0 1 1h4c1.657 0 3.053-1.39 2.446-2.931Z"/></g>`,
     label: "Analytics",
-    active: false,
-    href: routes.dashboard,
+    active: pathname === routes.analytics,
+    href: routes.analytics,
   },
   {
     icon: `<g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" opacity=".5"><path d="M19.954 4.029H3.227c-.904 0-1.636.932-1.636 2.083v12.497c0 1.15.732 2.082 1.636 2.082h16.727c.904 0 1.637-.932 1.637-2.082V6.112c0-1.15-.733-2.083-1.637-2.083ZM21.59 10h-20"/><circle cx="13.591" cy="16" r="2"/><circle cx="17.591" cy="16" r="2"/></g>`,
@@ -38,7 +40,7 @@ const items = [
         items.map((item) => (
           <a
             href={item.href}
-            class={`flex flex-col items-center gap-1 ${item.active ? "text-white" : "text-gray-500"}`}
+            class={`flex flex-col items-center gap-1 ${item.active ? "scale-105 text-white" : "scale-95 text-gray-500"}`}
           >
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
               <Fragment set:html={item.icon} />
@@ -49,4 +51,3 @@ const items = [
     </div>
   </div>
 </nav>
-

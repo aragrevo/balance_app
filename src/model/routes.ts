@@ -1,4 +1,4 @@
 export const routes = {
     dashboard: "/dashboard",
-    confirmation: "/confirmation",
+    analytics: "/analytics"
 };
