@@ -103,11 +103,11 @@ const percentage = (balance / data?.incomes) * 100;
     const payButton = $(".btn-pay");
     const receiveButton = $(".btn-receive");
 
-    payButton.addEventListener("click", () => {
+    payButton?.addEventListener("click", () => {
       showPayAside();
     });
 
-    receiveButton.addEventListener("click", () => {
+    receiveButton?.addEventListener("click", () => {
       showReceiveAside();
     });
   });

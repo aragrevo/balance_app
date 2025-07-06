@@ -37,7 +37,7 @@ const user = {
       <!-- Header -->
       <header class="flex items-center justify-between px-4 py-6">
         <div class="flex items-center gap-3">
-          <UserAvatar />
+          <UserAvatar transition:name="user-avatar" />
           <h1 class="text-xl text-white">Hi, {user.name}!</h1>
         </div>
         <div class="flex gap-4">
@@ -135,7 +135,6 @@ const user = {
       });
     });
 
-    console.log("astro:page-load", window.location.hash);
     if (window.location.hash) {
       const anchor = $$("a[href='" + window.location.hash + "']")[0];
       anchor.click();
