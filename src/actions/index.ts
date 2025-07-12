@@ -35,6 +35,25 @@ export const server = {
             return { data: input.money };
         }
     }),
+    setCurrentPage: defineAction({
+        input: z.object({
+            page: z.string()
+        }),
+        handler: async (input, context) => {
+            context.cookies.set("currentPage", decodeURIComponent(input.page), {
+                path: "/",
+                httpOnly: true,
+                sameSite: "strict",
+            });
+            return { data: input.page };
+        }
+    }),
+    getCurrentPage: defineAction({
+        handler: async (input, context) => {
+            const currentPage = context.cookies.get("currentPage")?.value || "/";
+            return { currentPage };
+        }
+    }),
     saveIncome: defineAction({
         accept: 'form',
         input: z.object({

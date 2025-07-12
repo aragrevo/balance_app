@@ -40,7 +40,7 @@ const items = [
         items.map((item) => (
           <a
             href={item.href}
-            class={`flex flex-col items-center gap-1 ${item.active ? "scale-105 text-white" : "scale-95 text-gray-500"}`}
+            class={`navigation-item flex flex-col items-center gap-1 ${item.active ? "scale-105 text-white" : "scale-95 text-gray-500"}`}
           >
             <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
               <Fragment set:html={item.icon} />
@@ -51,3 +51,24 @@ const items = [
     </div>
   </div>
 </nav>
+
+<script>
+  import { $$ } from "@/lib/selector";
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+
+  document.addEventListener("astro:page-load", () => {
+    const pathname = window.location.pathname;
+    const items: NodeListOf<HTMLAnchorElement> = $$(".navigation-item");
+    items.forEach((item) => {
+      item.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const href = item.getAttribute("href");
+        if (href) {
+          await actions.setCurrentPage({ page: href });
+          navigate(href);
+        }
+      });
+    });
+  });
+</script>

@@ -74,10 +74,11 @@ const urlsMoney = [
       btn.addEventListener("click", async (e) => {
         const money = btn.value;
         const { error } = await actions.setMoney({ money });
+        const { data } = await actions.getCurrentPage();
         console.log(error);
         if (!error) {
           overlay.show();
-          navigate(`/`);
+          navigate(data?.currentPage || "/");
         }
       });
     });
