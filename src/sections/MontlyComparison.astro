@@ -1,0 +1,94 @@
+---
+import BarChart from "@/components/BarChart.astro";
+const {
+  currentMonthTransactions,
+  lastMonthTransactions,
+  beforeLastMonthTransactions,
+  categories,
+} = Astro.props;
+
+const currentMonth = new Date().toLocaleString("es-ES", { month: "short" });
+const lastMonth = new Date(
+  new Date().setMonth(new Date().getMonth() - 1),
+).toLocaleString("es-ES", { month: "short" });
+const beforeLastMonth = new Date(
+  new Date().setMonth(new Date().getMonth() - 2),
+).toLocaleString("es-ES", { month: "short" });
+
+const categoriesMap = new Map<string, number[]>();
+
+const currentMonthTransactionsByCategory: Map<string, number> =
+  currentMonthTransactions?.reduce((acc, transaction) => {
+    const category = transaction.description;
+    acc.set(category, (acc.get(category) || 0) + transaction.cost);
+    return acc;
+  }, new Map());
+
+const lastMonthTransactionsByCategory: Map<string, number> =
+  lastMonthTransactions?.reduce((acc, transaction) => {
+    const category = transaction.description;
+    acc.set(category, (acc.get(category) || 0) + transaction.cost);
+    return acc;
+  }, new Map());
+
+const beforeLastMonthTransactionsByCategory: Map<string, number> =
+  beforeLastMonthTransactions?.reduce((acc, transaction) => {
+    const category = transaction.description;
+    acc.set(category, (acc.get(category) || 0) + transaction.cost);
+    return acc;
+  }, new Map());
+
+const categoryKeys: string[] = [
+  ...new Set([
+    ...currentMonthTransactionsByCategory.keys(),
+    ...lastMonthTransactionsByCategory.keys(),
+    ...beforeLastMonthTransactionsByCategory.keys(),
+  ]),
+];
+
+categoryKeys.forEach((category) => {
+  const cost = currentMonthTransactionsByCategory.get(category) || 0;
+  const lastMonthCost = lastMonthTransactionsByCategory.get(category) || 0;
+  const beforeLastMonthCost =
+    beforeLastMonthTransactionsByCategory.get(category) || 0;
+
+  categoriesMap.set(category, [cost, lastMonthCost, beforeLastMonthCost]);
+});
+
+const barChartDatasets = [
+  {
+    label: beforeLastMonth,
+    color: "#37D6A3",
+    data: [...categoriesMap.entries().map(([_, value]) => value[2])],
+  },
+  {
+    label: lastMonth,
+    color: "#A5B4FC",
+    data: [...categoriesMap.entries().map(([_, value]) => value[1])],
+  },
+  {
+    label: currentMonth,
+    color: "#FF6B6B",
+    data: [...categoriesMap.entries().map(([_, value]) => value[0])],
+  },
+];
+
+const barChartLabels: string[] = categoryKeys.map((key) => {
+  const category = categories?.find((c) => c.id === key);
+  return category?.name || key;
+});
+---
+
+<article class="p-4">
+  <h2 class="mb-6 text-xl text-white">Monthly Comparison</h2>
+  <div
+    class="flex justify-center rounded-md border border-white/10 bg-transparent bg-gradient-to-br p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
+  >
+    <BarChart
+      labels={barChartLabels}
+      datasets={barChartDatasets}
+      width={360}
+      height={300}
+    />
+  </div>
+</article>
