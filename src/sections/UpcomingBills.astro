@@ -16,8 +16,6 @@ interface Bill {
 const startDate = getStartOfMonth().toISOString();
 const endDate = getEndOfMonth().toISOString();
 const { data, error } = await getIncomes(startDate, endDate);
-
-console.log("upcoming bills", data);
 ---
 
 <section class="h-full overflow-hidden">

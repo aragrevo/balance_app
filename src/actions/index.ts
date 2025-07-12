@@ -15,7 +15,6 @@ export const server = {
         }),
         handler: async (input, context) => {
             const { data, error } = await saveTransaction(input);
-            console.log(data, error);
             if (error) {
                 return { error: error };
             }

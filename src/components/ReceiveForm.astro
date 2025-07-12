@@ -6,7 +6,6 @@ import Spinner from "./Spinner.astro";
 import Button from "@/components/Button.astro";
 
 const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
-console.log(moneyType);
 
 const { data: categories, error: categoriesError } =
   await getIncomeCategories();

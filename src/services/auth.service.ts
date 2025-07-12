@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase";
 
 export async function getUser() {
     const { data, error } = await supabase.auth.getUser();
-    // console.log("getUser", data, error);
     if (error) {
         return { data: null, error };
     }
