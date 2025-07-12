@@ -1,0 +1,216 @@
+---
+// interface DataPoint {
+//   value: number;
+//   color?: string;
+// }
+
+interface Dataset {
+  label: string;
+  data: number[];
+  color: string;
+}
+
+interface Props {
+  labels: string[];
+  datasets: Dataset[];
+  width?: number;
+  height?: number;
+  padding?: number;
+  barPadding?: number;
+  groupPadding?: number;
+}
+
+const {
+  labels,
+  datasets,
+  width = 800,
+  height = 400,
+  padding = 0,
+  barPadding = 0.1, // Espacio entre barras del mismo grupo
+  groupPadding = 0.2, // Espacio entre grupos
+} = Astro.props;
+
+// Calcular dimensiones del área de gráfico
+const chartWidth = width - padding * 2;
+const chartHeight = height - padding * 2;
+
+// Encontrar valores mínimos y máximos para escalar
+const allValues = datasets.flatMap((dataset) => dataset.data);
+const maxValue = Math.max(...allValues);
+const minValue = 0;
+const valueRange = maxValue - minValue;
+
+// Función para escalar valores al tamaño del gráfico
+const scaleY = (value: number) => {
+  return (
+    chartHeight - ((value - minValue) / valueRange) * chartHeight + padding
+  );
+};
+
+// Calcular ancho de las barras y grupos
+const totalGroups = labels.length;
+const barsPerGroup = datasets.length;
+const groupWidth = (chartWidth / totalGroups) * (1 - groupPadding);
+const barWidth = (groupWidth / barsPerGroup) * (1 - barPadding);
+
+// Función para obtener la posición X de cada barra
+const getBarX = (groupIndex: number, datasetIndex: number) => {
+  const groupX =
+    padding +
+    groupIndex * (chartWidth / totalGroups) +
+    ((chartWidth / totalGroups) * groupPadding) / 2;
+  return (
+    groupX + datasetIndex * barWidth + barPadding * barWidth * datasetIndex
+  );
+};
+
+// Función para obtener la altura de cada barra
+const getBarHeight = (value: number) => {
+  return height - padding - scaleY(value);
+};
+
+// Generar colores para la leyenda
+const legendItems = datasets.map((dataset, index) => ({
+  label: dataset.label,
+  color: dataset.color,
+}));
+---
+
+<div class="relative pb-2">
+  <!-- Leyenda -->
+  <div class="flex justify-center gap-6">
+    {
+      legendItems.map((item) => (
+        <div class="flex items-center gap-2">
+          <div
+            class="h-3 w-3 rounded-full"
+            style={`background-color: ${item.color}`}
+          />
+          <span class="text-sm text-gray-400 capitalize">{item.label}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <svg
+    viewBox={`0 0 ${width} ${height}`}
+    width="100%"
+    height={height}
+    class="overflow-visible"
+  >
+    <!-- Líneas de cuadrícula horizontales -->
+    <!-- {
+      Array.from({ length: 5 }, (_, i) => {
+        const y = padding + i * (chartHeight / 4);
+        const value = maxValue - i * (valueRange / 4);
+        return (
+          <g>
+            <line
+              x1={padding}
+              y1={y}
+              x2={width - padding}
+              y2={y}
+              stroke="#334155"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
+            <text
+              x={padding - 10}
+              y={y}
+              text-anchor="end"
+              alignment-baseline="middle"
+              class="fill-gray-400 text-xs"
+            >
+              ${value.toLocaleString()}
+            </text>
+          </g>
+        );
+      })
+    } -->
+
+    <!-- Grupos de barras y etiquetas -->
+    {
+      labels.map((label, groupIndex) => (
+        <g>
+          {/* Etiqueta del grupo */}
+          <text
+            x={getBarX(groupIndex, datasets.length / 2)}
+            y={height + 10}
+            text-anchor="middle"
+            class="fill-gray-400 text-[10px] capitalize"
+          >
+            {label}
+          </text>
+
+          {/* Barras del grupo */}
+          {datasets.map((dataset, datasetIndex) => {
+            const value = dataset.data[groupIndex];
+            const barX = getBarX(groupIndex, datasetIndex);
+            const barY = scaleY(value);
+            const barH = getBarHeight(value);
+
+            return (
+              <g>
+                {/* Gradiente para la barra */}
+                <defs>
+                  <linearGradient
+                    id={`barGradient-${groupIndex}-${datasetIndex}`}
+                    x1="0"
+                    x2="0"
+                    y1="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="0%"
+                      stop-color={dataset.color}
+                      stop-opacity="1"
+                    />
+                    <stop
+                      offset="100%"
+                      stop-color={dataset.color}
+                      stop-opacity="0.5"
+                    />
+                  </linearGradient>
+                </defs>
+
+                {/* Sombra de la barra */}
+                <rect
+                  x={barX}
+                  y={barY}
+                  width={barWidth}
+                  height={barH}
+                  fill="rgba(0,0,0,0.2)"
+                  transform="translate(3,3)"
+                  rx="4"
+                />
+
+                {/* Barra principal */}
+                <rect
+                  x={barX}
+                  y={barY}
+                  width={barWidth}
+                  height={barH}
+                  fill={`url(#barGradient-${groupIndex}-${datasetIndex})`}
+                  rx="4"
+                  class="peer transition-all duration-300 ease-in-out select-none hover:animate-pulse hover:brightness-110 active:animate-pulse"
+                />
+
+                {/* Valor sobre la barra */}
+                {!!value && value > 0 && (
+                  <text
+                    x={barX + barWidth / 2}
+                    y={barY - 8}
+                    text-anchor="middle"
+                    class="fill-white text-[10px] font-medium opacity-0 select-none peer-hover:opacity-100 peer-active:opacity-100"
+                  >
+                    ${value.toLocaleString()}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+        </g>
+      ))
+    }
+  </svg>
+</div>

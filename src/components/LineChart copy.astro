@@ -1,0 +1,143 @@
+---
+interface DataPoint {
+  value: number;
+  label: string;
+  color?: string;
+}
+
+interface Props {
+  data: DataPoint[];
+  width?: number;
+  height?: number;
+  padding?: number;
+}
+
+const { data, width = 800, height = 400, padding = 40 } = Astro.props;
+
+// Calcular dimensiones del área de gráfico
+const chartWidth = width - padding * 2;
+const chartHeight = height - padding * 2;
+
+// Encontrar valores mínimos y máximos para escalar
+const values = data.map((d) => d.value);
+const maxValue = Math.max(...values);
+const minValue = Math.min(...values);
+const valueRange = maxValue - minValue;
+
+// Función para escalar valores al tamaño del gráfico
+const scaleY = (value: number) => {
+  return (
+    chartHeight - ((value - minValue) / valueRange) * chartHeight + padding
+  );
+};
+
+const scaleX = (index: number) => {
+  return (index / (data.length - 1)) * chartWidth + padding;
+};
+
+// Generar path data
+const pathData = data
+  .map((point, index) => {
+    const x = scaleX(index);
+    const y = scaleY(point.value);
+    return `${index === 0 ? "M" : "L"} ${x},${y}`;
+  })
+  .join(" ");
+---
+
+<div class="relative">
+  <svg
+    width={width}
+    height={height}
+    viewBox={`0 0 ${width} ${height}`}
+    class="overflow-visible"
+  >
+    <!-- Líneas de cuadrícula horizontales -->
+    {
+      Array.from({ length: 5 }, (_, i) => {
+        const y = padding + i * (chartHeight / 4);
+        const value = maxValue - i * (valueRange / 4);
+        return (
+          <g>
+            <line
+              x1={padding}
+              y1={y}
+              x2={width - padding}
+              y2={y}
+              stroke="#334155"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
+            <text
+              x={padding - 10}
+              y={y}
+              text-anchor="end"
+              alignment-baseline="middle"
+              class="fill-gray-400 text-sm"
+            >
+              ${value.toLocaleString()}
+            </text>
+          </g>
+        );
+      })
+    }
+
+    <!-- Líneas de cuadrícula verticales y etiquetas -->
+    {
+      data.map((point, index) => {
+        const x = scaleX(index);
+        return (
+          <g>
+            <line
+              x1={x}
+              y1={padding}
+              x2={x}
+              y2={height - padding}
+              stroke="#334155"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
+            <text
+              x={x}
+              y={height - padding / 2}
+              text-anchor="middle"
+              class="fill-gray-400 text-sm"
+            >
+              {point.label}
+            </text>
+          </g>
+        );
+      })
+    }
+
+    <!-- Línea principal -->
+    <path
+      d={pathData}
+      fill="none"
+      stroke="#A5B4FC"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+
+    <!-- Puntos de datos -->
+    {
+      data.map((point, index) => (
+        <g>
+          <circle
+            cx={scaleX(index)}
+            cy={scaleY(point.value)}
+            r="6"
+            class="fill-navy-800 stroke-[#A5B4FC] stroke-[3]"
+          />
+          <circle
+            cx={scaleX(index)}
+            cy={scaleY(point.value)}
+            r="12"
+            class="fill-[#A5B4FC] opacity-10"
+          />
+        </g>
+      ))
+    }
+  </svg>
+</div>
+

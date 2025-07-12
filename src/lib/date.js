@@ -1,9 +1,12 @@
-export const getStartOfMonth = () => {
-  const currentDate = new Date();
-  return new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+import { lastDayOfMonth, sub, toDate } from "date-fns";
+
+export const getStartOfMonth = (subtractMonths = 0) => {
+  const currentDate =  toDate( new Date().setUTCHours(0,0,0,0)).setUTCDate(1)
+  return sub(currentDate, { months: subtractMonths});
 };
 
-export const getEndOfMonth = () => {
-  const currentDate = new Date();
-  return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+export const getEndOfMonth = (subtractMonths = 0) => {
+  const currentDate = toDate( new Date().setUTCHours(23,59,59,999))
+  const date = sub(currentDate, { months: subtractMonths});
+  return lastDayOfMonth(date);
 };

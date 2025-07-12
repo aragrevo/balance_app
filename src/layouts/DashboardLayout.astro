@@ -5,7 +5,17 @@ import PayForm from "@/components/PayForm.astro";
 import BottomDrawer from "@/components/BottomDrawer.astro";
 import ReceiveForm from "@/components/ReceiveForm.astro";
 import Toast from "@/components/Toast.astro";
+import { MoneyTypes } from "@/model/money-types.enum";
 const { title } = Astro.props;
+const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
+
+if (!moneyType) {
+  Astro.cookies.set("money", String(MoneyTypes.EUR), {
+    path: "/",
+    httpOnly: true,
+    sameSite: "strict",
+  });
+}
 ---
 
 <Layout title={title}>

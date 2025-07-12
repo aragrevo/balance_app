@@ -17,13 +17,17 @@
   <div class="">
     <p class="text-medium text-sm text-white">Login with Github</p>
 
-    <form action="/api/auth/signin" method="post" data-astro-reload class="flex justify-center w-full my-8">
+    <form
+      action="/api/auth/signin"
+      method="post"
+      data-astro-reload
+      class="my-8 flex w-full justify-center"
+    >
       <button
         value="github"
         name="provider"
         type="submit"
-        class="me-2 mb-2 flex items-center justify-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:ring-4 focus:ring-[#24292F]/50 focus:outline-none dark:hover:bg-[#050708]/30 dark:focus:ring-gray-500
-        w-full hover:cursor-pointer gap-3"
+        class="me-2 mb-2 flex w-full items-center justify-center gap-3 rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:cursor-pointer hover:bg-[#24292F]/90 focus:ring-4 focus:ring-[#24292F]/50 focus:outline-none dark:hover:bg-[#050708]/30 dark:focus:ring-gray-500"
       >
         <svg
           class="h-4 w-4"
@@ -40,9 +44,8 @@
         Continue
       </button>
     </form>
-    <p class="text-normal text-center text-xs text-white">v 1.0.0</p>
+    <p class="text-normal text-center text-xs text-white">v 1.1.0</p>
   </div>
   <div class="flex-1"></div>
   <div class="flex-1"></div>
 </main>
-

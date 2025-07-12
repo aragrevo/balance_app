@@ -8,8 +8,9 @@ export async function getTransactions(startDate: string, endDate: string, moneyT
         return { data: null, error: "User not found" };
     }
     const { data, error } = await supabase.from("expenses").select()
-        .filter("userId", "eq", user.id).filter("date", "gte", startDate)
-        // .filter("date", "lte", endDate)
+        .filter("userId", "eq", user.id)
+        .filter("date", "gte", startDate)
+        .filter("date", "lte", endDate)
         .filter("money", "eq", moneyType)
         .order("date", { ascending: false });
 

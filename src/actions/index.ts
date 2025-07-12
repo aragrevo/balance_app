@@ -38,7 +38,7 @@ export const server = {
     saveIncome: defineAction({
         accept: 'form',
         input: z.object({
-            amount: z.number().min(1),
+            amount: z.number().min(0.01),
             money: z.nativeEnum(MoneyTypes),
             description: z.string(),
         }),

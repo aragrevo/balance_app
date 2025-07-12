@@ -3,18 +3,82 @@ import DashboardLayout from "@/layouts/DashboardLayout.astro";
 import UserAvatar from "@/components/UserAvatar.astro";
 import MoneySelector from "@/components/MoneySelector.astro";
 import DonutChart from "@/components/DonutChart.astro";
+import LineChart from "@/components/LineChart.astro";
+import BarChart from "@/components/BarChart.astro";
 import { getBalance } from "@/services/balance.service";
 import type { MoneyTypes } from "@/model/money-types.enum";
 import { getEndOfMonth, getStartOfMonth } from "@/lib/date";
+import { getTransactions } from "@/services/transaction.service";
+import { getExpenseCategories } from "@/services/admin.service";
 
 const moneyType = Astro.cookies.get("money")?.value as MoneyTypes;
 
 const startDate = getStartOfMonth().toISOString();
 const endDate = getEndOfMonth().toISOString();
+const lastMonthStartDate = getStartOfMonth(1).toISOString();
+const lastMonthEndDate = getEndOfMonth(1).toISOString();
+const beforeLastMonthStartDate = getStartOfMonth(2).toISOString();
+const beforeLastMonthEndDate = getEndOfMonth(2).toISOString();
+
 const { data, error } = await getBalance(startDate, endDate, moneyType);
 if (error) {
   console.error(error);
 }
+
+const { data: currentMonthTransactions, error: currentMonthTransactionsError } =
+  await getTransactions(startDate, endDate, moneyType);
+
+const { data: lastMonthTransactions, error: lastMonthTransactionsError } =
+  await getTransactions(lastMonthStartDate, lastMonthEndDate, moneyType);
+
+const {
+  data: beforeLastMonthTransactions,
+  error: beforeLastMonthTransactionsError,
+} = await getTransactions(
+  beforeLastMonthStartDate,
+  beforeLastMonthEndDate,
+  moneyType,
+);
+
+const categories = new Map<string, number[]>();
+
+const currentMonthTransactionsByCategory: Map<string, number> =
+  currentMonthTransactions?.reduce((acc, transaction) => {
+    const category = transaction.description;
+    acc.set(category, (acc.get(category) || 0) + transaction.cost);
+    return acc;
+  }, new Map());
+
+const lastMonthTransactionsByCategory: Map<string, number> =
+  lastMonthTransactions?.reduce((acc, transaction) => {
+    const category = transaction.description;
+    acc.set(category, (acc.get(category) || 0) + transaction.cost);
+    return acc;
+  }, new Map());
+
+const beforeLastMonthTransactionsByCategory: Map<string, number> =
+  beforeLastMonthTransactions?.reduce((acc, transaction) => {
+    const category = transaction.description;
+    acc.set(category, (acc.get(category) || 0) + transaction.cost);
+    return acc;
+  }, new Map());
+
+const barChartLabels: string[] = [
+  ...new Set([
+    ...currentMonthTransactionsByCategory.keys(),
+    ...lastMonthTransactionsByCategory.keys(),
+    ...beforeLastMonthTransactionsByCategory.keys(),
+  ]),
+];
+
+barChartLabels.forEach((category) => {
+  const cost = currentMonthTransactionsByCategory.get(category) || 0;
+  const lastMonthCost = lastMonthTransactionsByCategory.get(category) || 0;
+  const beforeLastMonthCost =
+    beforeLastMonthTransactionsByCategory.get(category) || 0;
+
+  categories.set(category, [cost, lastMonthCost, beforeLastMonthCost]);
+});
 
 const chartData = [
   {
@@ -26,6 +90,42 @@ const chartData = [
     label: "Income",
     value: data?.incomes,
     color: "#A5B4FC", // Coral rojo
+  },
+];
+
+const lineChartData = [
+  { value: 3000, label: "08:00" },
+  { value: 2200, label: "10:00" },
+  { value: 3200, label: "12:00" },
+  { value: 3500, label: "15:00" },
+  { value: 4200, label: "18:00" },
+  { value: 3800, label: "21:00" },
+  { value: 3000, label: "24:00" },
+];
+
+const currentMonth = new Date().toLocaleString("es-ES", { month: "short" });
+const lastMonth = new Date(
+  new Date().setMonth(new Date().getMonth() - 1),
+).toLocaleString("es-ES", { month: "short" });
+const beforeLastMonth = new Date(
+  new Date().setMonth(new Date().getMonth() - 2),
+).toLocaleString("es-ES", { month: "short" });
+
+const barChartDatasets = [
+  {
+    label: beforeLastMonth,
+    color: "#37D6A3",
+    data: [...categories.entries().map(([_, value]) => value[2])],
+  },
+  {
+    label: lastMonth,
+    color: "#A5B4FC",
+    data: [...categories.entries().map(([_, value]) => value[1])],
+  },
+  {
+    label: currentMonth,
+    color: "#FF6B6B",
+    data: [...categories.entries().map(([_, value]) => value[0])],
   },
 ];
 ---
@@ -45,11 +145,34 @@ const chartData = [
         <MoneySelector />
       </div>
 
-      <div class="scrollbar-hide max-h-[65dvh] space-y-4 overflow-y-auto pb-14">
-        <div class="bg-navy-800 rounded-lg p-6 shadow-lg">
+      <div class="scrollbar-hide max-h-[85dvh] space-y-4 overflow-y-auto pb-14">
+        <div class="p-4">
           <h2 class="mb-6 text-xl text-white">Distribution Overview</h2>
-          <div class="flex justify-center">
+          <div
+            class="flex justify-center rounded-md border border-white/10 bg-transparent bg-gradient-to-br p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
+          >
             <DonutChart data={chartData} size={300} thickness={50} />
+          </div>
+        </div>
+
+        <!-- <div class="bg-navy-800 rounded-lg p-6 shadow-lg">
+          <h2 class="mb-6 text-xl text-white">Daily Balance Trend</h2>
+          <div class="flex justify-center">
+            <LineChart data={lineChartData} width={700} height={300} />
+          </div>
+        </div> -->
+
+        <div class="p-4">
+          <h2 class="mb-6 text-xl text-white">Monthly Comparison</h2>
+          <div
+            class="flex justify-center rounded-md border border-white/10 bg-transparent bg-gradient-to-br p-4 text-white shadow-2xl shadow-white/5 backdrop-blur-3xl"
+          >
+            <BarChart
+              labels={barChartLabels}
+              datasets={barChartDatasets}
+              width={360}
+              height={300}
+            />
           </div>
         </div>
       </div>

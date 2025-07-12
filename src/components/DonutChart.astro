@@ -74,9 +74,15 @@ const percentageToShow = new Intl.NumberFormat("en-US", {
 }).format(maxPercentage);
 ---
 
-<div class="flex flex-col items-center justify-center">
+<div class="flex w-full flex-col items-center justify-center">
   <div class="relative inline-block">
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} class="">
+    <svg
+      width="100%"
+      height="auto"
+      preserveAspectRatio="xMidYMid meet"
+      viewBox={`0 0 ${size} ${size}`}
+      class=""
+    >
       {/* Primero renderizamos todos los segmentos excepto el primero */}
       {paths.slice(1).map(({ path, color }) => <path d={path} fill={color} />)}
       {/* Luego renderizamos el primer segmento para que quede encima */}
