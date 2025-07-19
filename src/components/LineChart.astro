@@ -12,7 +12,7 @@ interface Props {
   padding?: number;
 }
 
-const { data, width = 800, height = 400, padding = 40 } = Astro.props;
+const { data, width = 800, height = 400, padding = 0 } = Astro.props;
 
 // Calcular dimensiones del área de gráfico
 const chartWidth = width - padding * 2;
@@ -50,7 +50,7 @@ const areaPath = `${linePath} L ${scaleX(data.length - 1)} ${height - padding} L
 
 <div class="relative">
   <svg
-    width={width}
+    width="100%"
     height={height}
     viewBox={`0 0 ${width} ${height}`}
     class="overflow-visible"
@@ -72,11 +72,11 @@ const areaPath = `${linePath} L ${scaleX(data.length - 1)} ${height - padding} L
               stroke-dasharray="4 4"
             />
             <text
-              x={padding - 10}
+              x={padding + 20}
               y={y}
               text-anchor="end"
               alignment-baseline="middle"
-              class="fill-gray-400 text-sm"
+              class="fill-gray-400 text-[10px] select-none"
             >
               ${value.toLocaleString()}
             </text>
@@ -102,9 +102,9 @@ const areaPath = `${linePath} L ${scaleX(data.length - 1)} ${height - padding} L
             />
             <text
               x={x}
-              y={height - padding / 2}
+              y={height + 18}
               text-anchor="middle"
-              class="fill-gray-400 text-sm"
+              class="fill-gray-400 text-sm capitalize select-none"
             >
               {point.label}
             </text>
@@ -134,14 +134,22 @@ const areaPath = `${linePath} L ${scaleX(data.length - 1)} ${height - padding} L
             cx={scaleX(index)}
             cy={scaleY(point.value)}
             r="6"
-            class="fill-navy-800 stroke-[#A5B4FC] stroke-[3]"
+            class="peer fill-navy-800 stroke-[#A5B4FC] stroke-[3]"
           />
           <circle
             cx={scaleX(index)}
             cy={scaleY(point.value)}
             r="12"
-            class="fill-[#A5B4FC] opacity-10"
+            class="peer fill-[#A5B4FC] opacity-10"
           />
+          <text
+            x={scaleX(index)}
+            y={scaleY(point.value) - 20}
+            text-anchor="middle"
+            class="fill-white text-[10px] font-medium opacity-0 select-none peer-hover:opacity-100 peer-active:opacity-100"
+          >
+            ${point.value.toLocaleString()}
+          </text>
         </g>
       ))
     }
